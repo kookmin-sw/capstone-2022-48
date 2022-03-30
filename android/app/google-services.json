@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "334047060163",
+    "project_id": "howfit-ca184",
+    "storage_bucket": "howfit-ca184.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334047060163:android:9fcaf5fa1c431e94828276",
+        "android_client_info": {
+          "package_name": "com.example.capstone_2022_48"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334047060163-6sg1rrfch6fpm837uffvp909h98dmb3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdyZM8EhPxy4xAip60s9TysE0niWfVzqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334047060163-6sg1rrfch6fpm837uffvp909h98dmb3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

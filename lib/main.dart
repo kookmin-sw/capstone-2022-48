@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
     initializeDateFormatting();
     return MaterialApp(
       title: 'test',
-      // home: HomeCalendar(),
-      home: StopWatch(),
+      home: HomeCalendar(),
+      // home: StopWatch(),
     );
   }
 }

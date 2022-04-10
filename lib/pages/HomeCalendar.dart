@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:table_calendar/table_calendar.dart';
-// import 'package:capstone_2022_48/Utilities.dart';
+import 'package:pedometer/pedometer.dart';
+import 'dart:async';
 
 class HomeCalendar extends StatefulWidget {
   const HomeCalendar({Key? key}) : super(key: key);
@@ -13,62 +13,89 @@ class HomeCalendar extends StatefulWidget {
 }
 
 class _HomeCalendarState extends State<HomeCalendar> {
+
+  // calendar
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
-  // CalendarFormat format = CalendarFormat.month;
-  // DateTime selectedDay = DateTime.now();
-  // DateTime focusedDay = DateTime.now();
-  //
-  // DateTime? rangeStart;
-  // DateTime? rangeEnd;
-  // late final ValueNotifier<List<Event>> selectedEvents;
-  // RangeSelectionMode rangeSelectionMode = RangeSelectionMode
-  //     .toggledOff; // Can be toggled on/off by longpressing a date
-  //
-  // void onDaySelected(selectedDay, focusedDay) {
-  //   if (!isSameDay(selectedDay, selectedDay)) {
-  //     setState(() {
-  //       selectedDay = selectedDay;
-  //       focusedDay = focusedDay;
-  //       rangeStart = null; // Important to clean those
-  //       rangeEnd = null;
-  //       rangeSelectionMode = RangeSelectionMode.toggledOff;
-  //     });
-  //
-  //     selectedEvents.value = getEventsForDay(selectedDay);
-  //   }
-  // }
-  //
-  // List<Event> getEventsForDay(DateTime day) {
-  //   // Implementation example
-  //   return kEvents[day] ?? [];
-  // }
+  // pedometer
+  late Stream<StepCount> _stepCountStream;
+  late Stream<PedestrianStatus> _pedestrianStatusStream;
+  String _status = '?';
+  String _steps = '?';
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  void onStepCount(StepCount event) {
+    // Handle step count changed
+    print(event);
+    setState(() {
+      _steps = event.steps.toString();
+    });
+  }
+
+  void onPedestrianStatusChanged(PedestrianStatus event) {
+    // Handle step count changed
+    print(event);
+    setState(() {
+      _status = event.status;
+    });
+  }
+
+  void onPedestrianStatusError(error) {
+    print('사용자 보행 상태 에러: $error');
+    setState(() {
+      _status = 'Pedestrian Status not available';
+    });
+    print(_status);
+  }
+
+  void onStepCountError(error) {
+    print('만보기 카운트 에러: $error');
+    setState(() {
+      _steps = '0';
+    });
+  }
+
+  void initPlatformState() {
+    _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+    _pedestrianStatusStream
+        .listen(onPedestrianStatusChanged)
+        .onError(onPedestrianStatusError);
+
+    _stepCountStream = Pedometer.stepCountStream;
+    _stepCountStream.listen(onStepCount).onError(onStepCountError);
+
+    if (!mounted) return;
+  }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('home'),
-        centerTitle: true,
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              height: 120,
-              color: Colors.yellow,
-              child: Text(
-                'view1',
-                style: TextStyle(
-                    fontFamily: 'Pretendard', fontWeight: FontWeight.bold),
-              ),
+            Text(
+              '오늘은 ' + _steps + ' 걸음',
+              style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: 'Pretendard',
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Container(
-              margin: EdgeInsets.all(20),
+              width: size.width * 0.9,
               child: TableCalendar(
                 locale: 'ko-KR',
 
@@ -144,27 +171,69 @@ class _HomeCalendarState extends State<HomeCalendar> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors.blue,
-                    child: Text(
-                      '운동시간 기록 view2',
-                      style: TextStyle(
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.bold),
-                    )),
-                Container(
-                  width: 100,
+                  width: size.width * 0.4,
                   height: 100,
-                  color: Colors.red,
-                  child: Text(
-                    '식단기록 view3',
-                    style: TextStyle(
-                        fontFamily: 'Pretendard', fontWeight: FontWeight.bold),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xffEEEEEE),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '운동 시간',
+                        style: TextStyle(
+                          fontFamily: 'Pretendard',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        'data',
+                        style: TextStyle(
+                            fontFamily: 'Pretendard',
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: size.width * 0.4,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xffEEEEEE),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '식단',
+                        style: TextStyle(
+                          fontFamily: 'Pretendard',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
+                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
+                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
+                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],

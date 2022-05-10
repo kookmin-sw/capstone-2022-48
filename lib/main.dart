@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     initializeDateFormatting();
     return MaterialApp(
+       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         // debugShowCheckedModeBanner: false,
         // title: 'test',

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'indicator.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class AverDietScreen extends StatefulWidget {
   const AverDietScreen({Key? key}) : super(key: key);
@@ -36,13 +37,30 @@ class _AverDietScreenState extends State<AverDietScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              '평균 영양 섭취 비율',
-              style: TextStyle(
-                fontFamily: 'Pretendard',
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_left),
+                  color: Colors.black,
+                  iconSize: 30,
+                  onPressed: () {},
+                ),
+                Text(
+                  '평균 영양 섭취 비율',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_right),
+                  color: Colors.black,
+                  iconSize: 30,
+                  onPressed: () {},
+                ),
+              ],
             ),
             SizedBox(
               height: 15.0,
@@ -184,22 +202,98 @@ class _AverDietScreenState extends State<AverDietScreen> {
             SizedBox(
               height: 15.0,
             ),
-            Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width * 0.8,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Color(0xffdddddd),
-              ),
-              child: Text(
-                '평균 권장 섭취율보다 n% 많이 섭취했어요! 탄수화물을 과다 섭취하면 비만, 고혈압의 위험이 있어요😥',
-                style: TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontSize: 16,
+            Row(
+              children: [
+                // SfRadialGauge(axes: <RadialAxis>[
+                //   RadialAxis(minimum: 0, maximum: 100, ranges: <GaugeRange>[
+                //     GaugeRange(
+                //         startValue: 0, endValue: 30, color: Colors.green),
+                //     GaugeRange(
+                //         startValue: 30, endValue: 60, color: Colors.orange),
+                //     GaugeRange(startValue: 60, endValue: 100, color: Colors.red)
+                //   ], pointers: <GaugePointer>[
+                //     NeedlePointer(value: 90)
+                //   ], annotations: <GaugeAnnotation>[
+                //     GaugeAnnotation(
+                //         widget: Container(
+                //             child: Text('90.0',
+                //                 style: TextStyle(
+                //                     fontSize: 12,
+                //                     fontWeight: FontWeight.bold))),
+                //         angle: 90,
+                //         positionFactor: 0.5)
+                //   ])
+                // ]),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: SfRadialGauge(
+                    axes: <RadialAxis>[
+                      RadialAxis(
+                          showLabels: false,
+                          showAxisLine: false,
+                          showTicks: false,
+                          minimum: 0,
+                          maximum: 99,
+                          ranges: <GaugeRange>[
+                            GaugeRange(
+                                startValue: 0,
+                                endValue: 33,
+                                color: Color(0xFFFE2A25),
+                                label: '경고!',
+                                sizeUnit: GaugeSizeUnit.factor,
+                                labelStyle: GaugeTextStyle(
+                                    fontFamily: 'Pretendard', fontSize: 12),
+                                startWidth: 0.65,
+                                endWidth: 0.65),
+                            GaugeRange(
+                              startValue: 33,
+                              endValue: 66,
+                              color: Color(0xFFFFBA00),
+                              label: '조금만 더 힘내세요',
+                              labelStyle: GaugeTextStyle(
+                                  fontFamily: 'Pretendard', fontSize: 12),
+                              startWidth: 0.65,
+                              endWidth: 0.65,
+                              sizeUnit: GaugeSizeUnit.factor,
+                            ),
+                            GaugeRange(
+                              startValue: 66,
+                              endValue: 99,
+                              color: Color(0xFF00AB47),
+                              label: '좋아요!',
+                              labelStyle: GaugeTextStyle(
+                                  fontFamily: 'Pretendard', fontSize: 12),
+                              sizeUnit: GaugeSizeUnit.factor,
+                              startWidth: 0.65,
+                              endWidth: 0.65,
+                            ),
+                          ],
+                          pointers: <GaugePointer>[
+                            NeedlePointer(value: 60)
+                          ])
+                    ],
+                  ),
                 ),
-              ),
-            )
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color(0xffdddddd),
+                  ),
+                  child: Text(
+                    '평균 권장 섭취율보다 n% 많이 섭취했어요! 탄수화물을 과다 섭취하면 비만, 고혈압의 위험이 있어요😥',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -46,6 +46,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.1.52
   fl_chart: ^0.50.1
   charts_flutter: ^0.12.0
+  syncfusion_flutter_gauges: ^20.1.55
 
 dev_dependencies:
   flutter_test:

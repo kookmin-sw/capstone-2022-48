@@ -24,6 +24,8 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
 
   bool showAvg = false;
 
+  double shapePointerValue = 25;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -133,54 +135,84 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                 Container(
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: MediaQuery.of(context).size.width * 0.4,
-                  child: SfRadialGauge(
-                    axes: <RadialAxis>[
-                      RadialAxis(
-                          showLabels: false,
-                          showAxisLine: false,
-                          showTicks: false,
-                          minimum: 0,
-                          maximum: 99,
-                          ranges: <GaugeRange>[
-                            GaugeRange(
-                                startValue: 0,
-                                endValue: 33,
-                                color: Color(0xFFFE2A25),
-                                label: '경고!',
-                                sizeUnit: GaugeSizeUnit.factor,
-                                labelStyle: GaugeTextStyle(
-                                    fontFamily: 'Pretendard', fontSize: 12),
-                                startWidth: 0.65,
-                                endWidth: 0.65),
-                            GaugeRange(
-                              startValue: 33,
-                              endValue: 66,
-                              color: Color(0xFFFFBA00),
-                              label: '조금만 더 힘내세요',
-                              labelStyle: GaugeTextStyle(
-                                  fontFamily: 'Pretendard', fontSize: 12),
-                              startWidth: 0.65,
-                              endWidth: 0.65,
-                              sizeUnit: GaugeSizeUnit.factor,
-                            ),
-                            GaugeRange(
-                              startValue: 66,
-                              endValue: 99,
-                              color: Color(0xFF00AB47),
-                              label: '좋아요!',
-                              labelStyle: GaugeTextStyle(
-                                  fontFamily: 'Pretendard', fontSize: 12),
-                              sizeUnit: GaugeSizeUnit.factor,
-                              startWidth: 0.65,
-                              endWidth: 0.65,
-                            ),
-                          ],
-                          pointers: <GaugePointer>[
-                            NeedlePointer(value: 60)
-                          ])
+                  child: SfLinearGauge(
+                    axisLabelStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Pretendard'),
+                    interval: 20,
+                    markerPointers: [
+                      LinearShapePointer(
+                        // value: 50,
+                        value: shapePointerValue,
+                        onChanged: (value) {
+                          setState(() {
+                            shapePointerValue = value;
+                          });
+                        },
+                      ),
                     ],
+                    // ranges: [
+                    //   LinearGaugeRange(
+                    //     startValue: 0,
+                    //     endValue: 100,
+                    //   ),
+                    // ],
+                    barPointers: [LinearBarPointer(value: 80)],
                   ),
                 ),
+                // Container(
+                //   height: MediaQuery.of(context).size.height * 0.2,
+                //   width: MediaQuery.of(context).size.width * 0.4,
+                //   child: SfRadialGauge(
+                //     axes: <RadialAxis>[
+                //       RadialAxis(
+                //           showLabels: false,
+                //           showAxisLine: false,
+                //           showTicks: false,
+                //           minimum: 0,
+                //           maximum: 99,
+                //           ranges: <GaugeRange>[
+                //             GaugeRange(
+                //                 startValue: 0,
+                //                 endValue: 33,
+                //                 color: Color(0xFFFE2A25),
+                //                 label: '경고!',
+                //                 sizeUnit: GaugeSizeUnit.factor,
+                //                 labelStyle: GaugeTextStyle(
+                //                     fontFamily: 'Pretendard', fontSize: 12),
+                //                 startWidth: 0.65,
+                //                 endWidth: 0.65),
+                //             GaugeRange(
+                //               startValue: 33,
+                //               endValue: 66,
+                //               color: Color(0xFFFFBA00),
+                //               label: '조금만 더 힘내세요',
+                //               labelStyle: GaugeTextStyle(
+                //                   fontFamily: 'Pretendard', fontSize: 12),
+                //               startWidth: 0.65,
+                //               endWidth: 0.65,
+                //               sizeUnit: GaugeSizeUnit.factor,
+                //             ),
+                //             GaugeRange(
+                //               startValue: 66,
+                //               endValue: 99,
+                //               color: Color(0xFF00AB47),
+                //               label: '좋아요!',
+                //               labelStyle: GaugeTextStyle(
+                //                   fontFamily: 'Pretendard', fontSize: 12),
+                //               sizeUnit: GaugeSizeUnit.factor,
+                //               startWidth: 0.65,
+                //               endWidth: 0.65,
+                //             ),
+                //           ],
+                //           pointers: <GaugePointer>[
+                //             NeedlePointer(value: 60)
+                //           ])
+                //     ],
+                //   ),
+                // ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: MediaQuery.of(context).size.width * 0.4,

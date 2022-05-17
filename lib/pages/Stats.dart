@@ -26,7 +26,8 @@ class _StatsState extends State<Stats> {
     //     ),
     //   ),
     // );
-    // return AverStepsScreen();
-    return AverDietScreen();
+    return AverStepsScreen();
+    // return AverDietScreen();
+    // return AverExerScreen();
   }
 }

@@ -11,23 +11,19 @@ class Stats extends StatefulWidget {
 }
 
 class _StatsState extends State<Stats> {
+  PageController _pagecontroller = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   backgroundColor: Color(0xffeeeeee),
-    //   body: Center(
-    //     child: Text(
-    //       '통계 페이지',
-    //       style: TextStyle(
-    //         fontFamily: 'Pretendard',
-    //         fontWeight: FontWeight.bold,
-    //         fontSize: 24,
-    //       ),
-    //     ),
-    //   ),
-    // );
-    return AverStepsScreen();
-    // return AverDietScreen();
-    // return AverExerScreen();
+    return Scaffold(
+      body: PageView(
+        controller: _pagecontroller,
+        children: [
+          AverStepsScreen(),
+          AverDietScreen(),
+          AverExerScreen(),
+        ],
+      ),
+    );
   }
 }

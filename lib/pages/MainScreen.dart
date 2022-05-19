@@ -43,33 +43,39 @@ class _MainScreenState extends State<MainScreen> {
               Stats(),
             ],
           ),
-          bottomNavigationBar: TabBar(
-            labelStyle: TextStyle(
-                fontFamily: 'Pretendard',
-                fontWeight: FontWeight.bold,
-                fontSize: 12),
-            tabs: <Widget>[
-              Tab(
-                height: 50,
-                icon: Icon(Icons.favorite),
-                text: 'home',
+          bottomNavigationBar: Container(
+            // height: MediaQuery.of(context).size.height * 0.09,
+            child: TabBar(
+              labelStyle: TextStyle(
+                  fontFamily: 'Pretendard',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12),
+              tabs: <Widget>[
+                Tab(
+                  height: 60,
+                  icon: Icon(Icons.favorite),
+                  text: 'home',
+                ),
+                Tab(
+                    height: 60,
+                    icon: Icon(Icons.directions_run),
+                    text: 'exercise'),
+                Tab(
+                  height: 60,
+                  icon: Icon(Icons.restaurant),
+                  text: 'diet',
+                ),
+                Tab(
+                  height: 60,
+                  icon: Icon(Icons.assessment),
+                  text: 'stats',
+                ),
+              ],
+              indicator: BoxDecoration(
+                color: Color(0xff4675C0),
               ),
-              Tab(
-                  height: 50,
-                  icon: Icon(Icons.directions_run),
-                  text: 'exercise'),
-              Tab(
-                height: 50,
-                icon: Icon(Icons.restaurant),
-                text: 'diet',
-              ),
-              Tab(
-                height: 50,
-                icon: Icon(Icons.assessment),
-                text: 'stats',
-              ),
-            ],
-            labelColor: Color(0xff4675C0),
+              labelColor: Color(0xffffffff),
+            ),
           ),
         ),
       ),

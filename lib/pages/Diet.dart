@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Diet extends StatefulWidget {
   const Diet({Key? key}) : super(key: key);
@@ -65,87 +66,116 @@ class _DietState extends State<Diet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              CustomRadio("아침", 1),
-              SizedBox(width: 10),
-              CustomRadio("점심", 2),
-              SizedBox(width: 10),
-              CustomRadio("저녁", 3),
-              SizedBox(width: 10),
-              CustomRadio("간식", 4),
-            ]),
-          ),
-          Center(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child: TextField(
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Pretendard'),
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      hintText: '식단을 입력해주세요.',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromARGB(255, 61, 67, 114)),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  CustomRadio("아침", 1),
+                  SizedBox(width: 10),
+                  CustomRadio("점심", 2),
+                  SizedBox(width: 10),
+                  CustomRadio("저녁", 3),
+                  SizedBox(width: 10),
+                  CustomRadio("간식", 4),
+                ]),
+              ),
+              Center(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: TextField(
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Pretendard'),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: '식단을 입력해주세요.',
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 61, 67, 114)),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 61, 67, 114)),
+                          ),
+                        ),
+                        onChanged: (String str) {
+                          setState(() => inputs = str);
+                        },
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromARGB(255, 61, 67, 114)),
-                      ),
+                      padding: EdgeInsets.only(top: 30, bottom: 20),
+                      width: 200,
                     ),
-                    onChanged: (String str) {
-                      setState(() => inputs = str);
-                    },
-                  ),
-                  padding: EdgeInsets.only(top: 50, bottom: 50),
-                  width: 200,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _icon(0, Icons.sentiment_very_satisfied),
-                    SizedBox(width: 5),
-                    _icon(
-                      1,
-                      Icons.sentiment_satisfied,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _icon(0, Icons.sentiment_very_satisfied),
+                        SizedBox(width: 5),
+                        _icon(
+                          1,
+                          Icons.sentiment_satisfied,
+                        ),
+                        SizedBox(width: 5),
+                        _icon(
+                          2,
+                          Icons.sentiment_very_dissatisfied,
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 5),
-                    _icon(
-                      2,
-                      Icons.sentiment_very_dissatisfied,
-                    ),
+                    SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton.icon(
+                          icon: Icon(Icons.add),
+                          onPressed: () {},
+                          label: Text('삭제'),
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(100, 45),
+                            primary: Color(0xffbbbbbb),
+                            elevation: 0.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Pretendard',
+                                fontSize: 15),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 25,
+                        ),
+                        ElevatedButton.icon(
+                          icon: Icon(Icons.add),
+                          onPressed: () {},
+                          label: Text('추가'),
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(100, 45),
+                            primary: Color(0xff19335A),
+                            elevation: 0.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Pretendard',
+                                fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
+                  mainAxisAlignment: MainAxisAlignment.center,
                 ),
-                SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('+  추가'),
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(100, 45),
-                    primary: Color.fromARGB(255, 61, 67, 114),
-                    elevation: 0.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    textStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Pretendard',
-                        fontSize: 15),
-                  ),
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    ));
+    );
   }
 }

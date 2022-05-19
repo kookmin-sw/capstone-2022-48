@@ -14,25 +14,12 @@ class HomeCalendar extends StatefulWidget {
 }
 
 class _HomeCalendarState extends State<HomeCalendar> {
-  // Icon iconFronList(int index) {
-  //   if (index == 0) {
-  //     return Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb));
-  //   } else if (index == 1) {
-  //     return Icon(Icons.sentiment_very_satisfied, color: Color(0xffFFCD00));
-  //   } else if (index == 2) {
-  //     return Icon(Icons.sentiment_satisfied, color: Color(0xff4675C0));
-  //   } else if (index == 3) {
-  //     return Icon(Icons.mood_bad, color: Color(0xffB8BFD6));
-  //   }
-  // }
-
   Map<String, Icon> iconList = {
     'good': Icon(Icons.sentiment_very_satisfied, color: Color(0xffFFCD00)),
     'soso': Icon(Icons.sentiment_satisfied, color: Color(0xff4675C0)),
     'bad': Icon(Icons.mood_bad, color: Color(0xffB8BFD6)),
     'default': Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
   };
-
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
@@ -253,14 +240,6 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         // mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Icon(Icons.sentiment_satisfied,
-                          //     color: Color(0xffbbbbbb)),
-                          // Icon(Icons.sentiment_satisfied,
-                          //     color: Color(0xffbbbbbb)),
-                          // Icon(Icons.sentiment_satisfied,
-                          //     color: Color(0xffbbbbbb)),
-                          // Icon(Icons.sentiment_satisfied,
-                          //     color: Color(0xffbbbbbb)),
                           IconButton(
                             constraints: BoxConstraints(maxWidth: 30),
                             padding: EdgeInsets.zero,

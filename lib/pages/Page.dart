@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:capstone_2022_48/pages/HomeCalendar.dart';
 import 'package:capstone_2022_48/pages/Exercise.dart';
 import 'package:capstone_2022_48/pages/Diet.dart';
 import 'package:capstone_2022_48/pages/Stats.dart';
 
+// import 'package:flutter_event_calendar/flutter_event_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
+  runApp(MyApp());
+  // initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MyApp extends StatelessWidget {
+  // const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting();
@@ -71,51 +76,5 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
-
-    // int _selectedIndex = 0;
-
-    // initializeDateFormatting();
-    // return Scaffold(
-    //   body: IndexedStack(
-    //     index: _selectedIndex,
-    //     children: [
-    //       HomeCalendar(),
-    //       StopWatch(),
-    //       Diet(),
-    //       Stats(),
-    //     ],
-    //   ),
-    //   bottomNavigationBar: BottomNavigationBar(
-    //     showSelectedLabels: false,
-    //     showUnselectedLabels: false,
-    //     currentIndex: _selectedIndex,
-    //     backgroundColor: Colors.grey[100],
-    //     selectedItemColor: Colors.black,
-    //     unselectedItemColor: Colors.black54,
-    //     onTap: (index) {
-    //       setState(() {
-    //         _selectedIndex = index;
-    //       });
-    //     },
-    //     items: [
-    //       BottomNavigationBarItem(
-    //         icon: Icon(Icons.favorite),
-    //         label: "",
-    //       ),
-    //       BottomNavigationBarItem(
-    //         icon: Icon(Icons.directions_run),
-    //         label: "",
-    //       ),
-    //       BottomNavigationBarItem(
-    //         icon: Icon(Icons.restaurant),
-    //         label: "",
-    //       ),
-    //       BottomNavigationBarItem(
-    //         icon: Icon(Icons.assessment),
-    //         label: "",
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

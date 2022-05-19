@@ -12,7 +12,6 @@ class HomeCalendar extends StatefulWidget {
 }
 
 class _HomeCalendarState extends State<HomeCalendar> {
-
   // calendar
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
@@ -226,10 +225,14 @@ class _HomeCalendarState extends State<HomeCalendar> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
+                          Icon(Icons.sentiment_satisfied,
+                              color: Color(0xffbbbbbb)),
+                          Icon(Icons.sentiment_satisfied,
+                              color: Color(0xffbbbbbb)),
+                          Icon(Icons.sentiment_satisfied,
+                              color: Color(0xffbbbbbb)),
+                          Icon(Icons.sentiment_satisfied,
+                              color: Color(0xffbbbbbb)),
                         ],
                       ),
                     ],

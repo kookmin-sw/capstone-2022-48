@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:capstone_2022_48/pages/Signin_screen.dart';
 
 // import 'package:capstone_2022_48/pages/HomeCalendar.dart';
 // import 'package:capstone_2022_48/pages/Exercise.dart';
 // import 'package:capstone_2022_48/pages/Diet.dart';
 // import 'package:capstone_2022_48/pages/Stats.dart';
-import 'package:capstone_2022_48/pages/MainScreen.dart';
 
 // import 'package:flutter_event_calendar/flutter_event_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -125,16 +126,20 @@ import 'package:intl/date_symbol_data_local.dart';
 //   }
 // }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      home: SignInScreen(),
     );
   }
 }

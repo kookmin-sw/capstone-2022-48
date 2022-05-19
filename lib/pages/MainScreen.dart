@@ -8,6 +8,8 @@ import 'package:capstone_2022_48/pages/Stats.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:capstone_2022_48/pages/ExercisePage.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -36,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               HomeCalendar(),
               StopWatch(),
+              // ExerciseScreen(),
               Diet(),
               Stats(),
             ],

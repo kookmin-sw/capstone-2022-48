@@ -9,6 +9,8 @@ import 'package:capstone_2022_48/pages/Signin_screen.dart';
 
 // import 'package:flutter_event_calendar/flutter_event_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:capstone_2022_48/model/DataModel.dart';
+import 'package:capstone_2022_48/pages/MainScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // void main() {
@@ -139,7 +141,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInScreen(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ExerciseData()),
+          ChangeNotifierProvider(create: (_) => DietData()),
+          ChangeNotifierProvider(create: (_) => StepData()),
+        ],
+        child: MainScreen(),
+      ),
+      // home: SignInScreen(),
     );
   }
 }

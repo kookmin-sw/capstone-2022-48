@@ -1,6 +1,8 @@
 //ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:provider/provider.dart';
+import 'package:capstone_2022_48/model/DataModel.dart';
 
 class StopWatch extends StatefulWidget {
   const StopWatch({Key? key}) : super(key: key);
@@ -10,6 +12,10 @@ class StopWatch extends StatefulWidget {
 }
 
 class _StopWatchState extends State<StopWatch> {
+  late ExerciseData _exerciseData;
+
+  DateTime _today = DateTime.now();
+
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   final _isHours = true;
   final List<String> _valueList = [
@@ -31,6 +37,8 @@ class _StopWatchState extends State<StopWatch> {
 
   @override
   Widget build(BuildContext context) {
+    _exerciseData = Provider.of<ExerciseData>(context, listen: false);
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -80,7 +88,7 @@ class _StopWatchState extends State<StopWatch> {
 
                   return Text(displayTime,
                       style: const TextStyle(
-                          fontSize: 40,
+                          fontSize: 36,
                           fontFamily: 'Pretendard',
                           fontWeight: FontWeight.bold));
                 }),
@@ -157,8 +165,18 @@ class _StopWatchState extends State<StopWatch> {
                   ElevatedButton(
                     onPressed: () {
                       _stopWatchTimer.onExecute.add(StopWatchExecute.lap);
+                      // print(_stopWatchTimer.rawTime.value);
+                      // print(_stopWatchTimer.minuteTime.value);
+                      print(_stopWatchTimer.secondTime.value);
+                      context
+                          .read<ExerciseData>()
+                          .addTime(_stopWatchTimer.secondTime.value);
+                      // String hours = StopWatchTimer.getDisplayTimeHours(value);
+                      // _exerciseData
+                      //     .addTime(StopWatchTimer.getDisplayTime(value));
                     },
-                    child: const Text('+  추가'),
+                    child: Text('+  추가'),
+                    // child: Text('${StopWatchTimer.getRawHours()}'),
                     style: ElevatedButton.styleFrom(
                       fixedSize: const Size(100, 45),
                       primary: Color.fromARGB(255, 61, 67, 114),

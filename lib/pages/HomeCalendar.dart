@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:pedometer/pedometer.dart';
 import 'dart:async';
+import 'package:capstone_2022_48/model/DataModel.dart';
 
 class HomeCalendar extends StatefulWidget {
   const HomeCalendar({Key? key}) : super(key: key);
@@ -12,8 +14,25 @@ class HomeCalendar extends StatefulWidget {
 }
 
 class _HomeCalendarState extends State<HomeCalendar> {
+  // Icon iconFronList(int index) {
+  //   if (index == 0) {
+  //     return Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb));
+  //   } else if (index == 1) {
+  //     return Icon(Icons.sentiment_very_satisfied, color: Color(0xffFFCD00));
+  //   } else if (index == 2) {
+  //     return Icon(Icons.sentiment_satisfied, color: Color(0xff4675C0));
+  //   } else if (index == 3) {
+  //     return Icon(Icons.mood_bad, color: Color(0xffB8BFD6));
+  //   }
+  // }
 
-  // calendar
+  Map<String, Icon> iconList = {
+    'good': Icon(Icons.sentiment_very_satisfied, color: Color(0xffFFCD00)),
+    'soso': Icon(Icons.sentiment_satisfied, color: Color(0xff4675C0)),
+    'bad': Icon(Icons.mood_bad, color: Color(0xffB8BFD6)),
+    'default': Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
+  };
+
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
@@ -24,6 +43,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
   late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?';
   String _steps = '?';
+  // String _steps = context.watch<StepData>().steps.toString();
 
   @override
   void initState() {
@@ -76,6 +96,10 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    int _exerciseMinutes = context.watch<ExerciseData>().time ~/ 60;
+    int _exerciseHours =
+        (_exerciseMinutes ~/ 60 == 0) ? 0 : _exerciseMinutes ~/ 60;
+
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -196,7 +220,9 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         ),
                       ),
                       Text(
-                        'data',
+                        // 'data',
+                        // '${context.watch<ExerciseData>().time}',
+                        '${_exerciseHours}시간 ${_exerciseMinutes}분',
                         style: TextStyle(
                             fontFamily: 'Pretendard',
                             fontWeight: FontWeight.normal),
@@ -224,12 +250,45 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         ),
                       ),
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        // mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
-                          Icon(Icons.sentiment_satisfied, color: Color(0xffbbbbbb)),
+                          // Icon(Icons.sentiment_satisfied,
+                          //     color: Color(0xffbbbbbb)),
+                          // Icon(Icons.sentiment_satisfied,
+                          //     color: Color(0xffbbbbbb)),
+                          // Icon(Icons.sentiment_satisfied,
+                          //     color: Color(0xffbbbbbb)),
+                          // Icon(Icons.sentiment_satisfied,
+                          //     color: Color(0xffbbbbbb)),
+                          IconButton(
+                            constraints: BoxConstraints(maxWidth: 30),
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.sentiment_satisfied),
+                            color: const Color(0xffbbbbbb),
+                            onPressed: () => ExerciseDialog(),
+                          ),
+                          IconButton(
+                            constraints: BoxConstraints(maxHeight: 24),
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.sentiment_satisfied),
+                            color: const Color(0xffbbbbbb),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            constraints: BoxConstraints(maxHeight: 24),
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.sentiment_satisfied),
+                            color: const Color(0xffbbbbbb),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            constraints: BoxConstraints(maxHeight: 24),
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.sentiment_satisfied),
+                            color: const Color(0xffbbbbbb),
+                            onPressed: () {},
+                          ),
                         ],
                       ),
                     ],
@@ -241,5 +300,72 @@ class _HomeCalendarState extends State<HomeCalendar> {
         ),
       ),
     );
+  }
+
+  void ExerciseDialog() {
+    final List<String> _valueList = [
+      '운동 선택',
+      '스트레칭',
+      '헬스',
+      '런닝',
+      '필라테스',
+      '걷기',
+      '그외'
+    ];
+    String _selectedValue = '운동 선택';
+
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                new Text(
+                  '식단 추가',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Pretendard',
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            //
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '분류',
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  '확인',
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  '취소',
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

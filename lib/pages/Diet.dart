@@ -15,7 +15,8 @@ class Diet extends StatefulWidget {
 
 class _DietState extends State<Diet> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  late DietData _dietData;
+  // late DietData _dietData;
+  late List<DietData> _dietDataList;
 
   DateTime date = DateTime.now();
   late int type; // 1:아침 2:점심 3:저녁 4:간식
@@ -171,9 +172,13 @@ class _DietState extends State<Diet> {
                         ElevatedButton.icon(
                           icon: Icon(Icons.add),
                           onPressed: () {
-                            context
-                                .read<DietData>()
-                                .setDietData(date, type, food, score);
+                            // context
+                            //     .read<DietData>()
+                            //     .setDietData(date, type, food, score);
+                            if (type == 1) {
+                            } else if (type == 2) {
+                            } else if (type == 3) {
+                            } else if (type == 4) {}
                           },
                           label: Text('추가'),
                           style: ElevatedButton.styleFrom(

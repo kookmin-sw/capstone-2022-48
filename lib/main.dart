@@ -131,7 +131,11 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => ExerciseData()),
+    ChangeNotifierProvider(create: (_) => DietData()),
+    ChangeNotifierProvider(create: (_) => StepData()),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -141,15 +145,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MultiProvider(
+      /* home: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => ExerciseData()),
           ChangeNotifierProvider(create: (_) => DietData()),
           ChangeNotifierProvider(create: (_) => StepData()),
         ],
         child: MainScreen(),
-      ),
-      // home: SignInScreen(),
+      ),*/
+      home: SignInScreen(),
     );
   }
 }

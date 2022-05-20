@@ -223,7 +223,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                     color: Color(0xffdddddd),
                   ),
                   child: Text(
-                    '평균 권장 섭취율보다 n% 많이 섭취했어요! 탄수화물을 과다 섭취하면 비만, 고혈압의 위험이 있어요😥',
+                    '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
                     style: TextStyle(
                       fontFamily: 'Pretendard',
                       fontSize: 16,

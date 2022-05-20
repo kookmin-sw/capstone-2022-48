@@ -11,11 +11,15 @@ class AverExerScreen extends StatefulWidget {
 }
 
 class _AverExerScreenState extends State<AverExerScreen> {
-  bool isDay = false;
   bool isWeek = true;
   bool isMonth = false;
   late List<bool> isSelected;
-  List<bool> _selections = List.generate(3, (_) => false);
+
+  @override
+  void initState() {
+    isSelected = [isWeek, isMonth];
+    super.initState();
+  }
 
   List<Color> gradientColors = [
     const Color(0xff8CAAD8),
@@ -69,9 +73,6 @@ class _AverExerScreenState extends State<AverExerScreen> {
               children: [
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('오늘', style: TextStyle(fontSize: 14))),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text('최근 7일', style: TextStyle(fontSize: 14))),
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -79,15 +80,8 @@ class _AverExerScreenState extends State<AverExerScreen> {
               ],
               // isSelected: isSelected,
               // onPressed: toggleSelect,
-              isSelected: _selections,
-              onPressed: (int index) {
-                setState(() {
-                  // _selections[index] = !_selections[index];
-                  for (int i = 0; i < _selections.length; i++) {
-                    _selections[i] = i == index;
-                  }
-                });
-              },
+              isSelected: isSelected,
+              onPressed: toggleSelect,
               // renderBorder: false,
             ),
             SizedBox(
@@ -476,5 +470,18 @@ class _AverExerScreenState extends State<AverExerScreen> {
         ),
       ],
     );
+  }
+
+  void toggleSelect(value) {
+    if (value == 0) {
+      isWeek = true;
+      isMonth = false;
+    } else {
+      isWeek = false;
+      isMonth = true;
+    }
+    setState(() {
+      isSelected = [isWeek, isMonth];
+    });
   }
 }

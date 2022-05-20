@@ -11,11 +11,16 @@ class AverStepsScreen extends StatefulWidget {
 }
 
 class _AverStepsScreenState extends State<AverStepsScreen> {
-  bool isDay = false;
   bool isWeek = true;
   bool isMonth = false;
   late List<bool> isSelected;
-  List<bool> _selections = List.generate(3, (_) => false);
+  // List<bool> _selections = List.generate(3, (_) => false);
+
+  @override
+  void initState() {
+    isSelected = [isWeek, isMonth];
+    super.initState();
+  }
 
   List<Color> gradientColors = [
     const Color(0xff8CAAD8),
@@ -69,9 +74,6 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
               children: [
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('오늘', style: TextStyle(fontSize: 14))),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text('최근 7일', style: TextStyle(fontSize: 14))),
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -79,16 +81,17 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
               ],
               // isSelected: isSelected,
               // onPressed: toggleSelect,
-              isSelected: _selections,
-              onPressed: (int index) {
-                setState(() {
-                  // _selections[index] = !_selections[index];
-                  for (int i = 0; i < _selections.length; i++) {
-                    _selections[i] = i == index;
-                  }
-                });
-              },
+              isSelected: isSelected,
+              // onPressed: (int index) {
+              //   setState(() {
+              //     // _selections[index] = !_selections[index];
+              //     for (int i = 0; i < _selections.length; i++) {
+              //       _selections[i] = i == index;
+              //     }
+              //   });
+              // },
               // renderBorder: false,
+              onPressed: toggleSelect,
             ),
             SizedBox(
               height: 15.0,
@@ -112,26 +115,6 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
             ),
             Row(
               children: [
-                // SfRadialGauge(axes: <RadialAxis>[
-                //   RadialAxis(minimum: 0, maximum: 100, ranges: <GaugeRange>[
-                //     GaugeRange(
-                //         startValue: 0, endValue: 30, color: Colors.green),
-                //     GaugeRange(
-                //         startValue: 30, endValue: 60, color: Colors.orange),
-                //     GaugeRange(startValue: 60, endValue: 100, color: Colors.red)
-                //   ], pointers: <GaugePointer>[
-                //     NeedlePointer(value: 90)
-                //   ], annotations: <GaugeAnnotation>[
-                //     GaugeAnnotation(
-                //         widget: Container(
-                //             child: Text('90.0',
-                //                 style: TextStyle(
-                //                     fontSize: 12,
-                //                     fontWeight: FontWeight.bold))),
-                //         angle: 90,
-                //         positionFactor: 0.5)
-                //   ])
-                // ]),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: MediaQuery.of(context).size.width * 0.4,
@@ -162,57 +145,6 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                     barPointers: [LinearBarPointer(value: 80)],
                   ),
                 ),
-                // Container(
-                //   height: MediaQuery.of(context).size.height * 0.2,
-                //   width: MediaQuery.of(context).size.width * 0.4,
-                //   child: SfRadialGauge(
-                //     axes: <RadialAxis>[
-                //       RadialAxis(
-                //           showLabels: false,
-                //           showAxisLine: false,
-                //           showTicks: false,
-                //           minimum: 0,
-                //           maximum: 99,
-                //           ranges: <GaugeRange>[
-                //             GaugeRange(
-                //                 startValue: 0,
-                //                 endValue: 33,
-                //                 color: Color(0xFFFE2A25),
-                //                 label: '경고!',
-                //                 sizeUnit: GaugeSizeUnit.factor,
-                //                 labelStyle: GaugeTextStyle(
-                //                     fontFamily: 'Pretendard', fontSize: 12),
-                //                 startWidth: 0.65,
-                //                 endWidth: 0.65),
-                //             GaugeRange(
-                //               startValue: 33,
-                //               endValue: 66,
-                //               color: Color(0xFFFFBA00),
-                //               label: '조금만 더 힘내세요',
-                //               labelStyle: GaugeTextStyle(
-                //                   fontFamily: 'Pretendard', fontSize: 12),
-                //               startWidth: 0.65,
-                //               endWidth: 0.65,
-                //               sizeUnit: GaugeSizeUnit.factor,
-                //             ),
-                //             GaugeRange(
-                //               startValue: 66,
-                //               endValue: 99,
-                //               color: Color(0xFF00AB47),
-                //               label: '좋아요!',
-                //               labelStyle: GaugeTextStyle(
-                //                   fontFamily: 'Pretendard', fontSize: 12),
-                //               sizeUnit: GaugeSizeUnit.factor,
-                //               startWidth: 0.65,
-                //               endWidth: 0.65,
-                //             ),
-                //           ],
-                //           pointers: <GaugePointer>[
-                //             NeedlePointer(value: 60)
-                //           ])
-                //     ],
-                //   ),
-                // ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: MediaQuery.of(context).size.width * 0.4,
@@ -479,6 +411,19 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
         ),
       ],
     );
+  }
+
+  void toggleSelect(value) {
+    if (value == 0) {
+      isWeek = true;
+      isMonth = false;
+    } else {
+      isWeek = false;
+      isMonth = true;
+    }
+    setState(() {
+      isSelected = [isWeek, isMonth];
+    });
   }
 }
 

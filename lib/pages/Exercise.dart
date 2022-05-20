@@ -162,7 +162,7 @@ class _StopWatchState extends State<StopWatch> {
                       onPressed: () {
                         _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
                       },
-                      label: Text('삭제'),
+                      label: Text('리셋'),
                       style: ElevatedButton.styleFrom(
                         fixedSize: const Size(100, 45),
                         primary: Color(0xffbbbbbb),

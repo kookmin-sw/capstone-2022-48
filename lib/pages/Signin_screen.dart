@@ -26,8 +26,10 @@ class _SignInScreenState extends State<SignInScreen> {
             padding: EdgeInsets.fromLTRB(
                 20, MediaQuery.of(context).size.height * 0.2, 20, 0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                //logoWidget("assets/images/logo.png"),
+                Image.asset("assets/images/logo.png",
+                    width: 220, height: 250, fit: BoxFit.fill),
                 SizedBox(
                   height: 30,
                 ),

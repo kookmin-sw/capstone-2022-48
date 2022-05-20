@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:pedometer/pedometer.dart';
 import 'dart:async';
 import 'package:capstone_2022_48/model/DataModel.dart';
+import 'dart:io';
 
 class HomeCalendar extends StatefulWidget {
   const HomeCalendar({Key? key}) : super(key: key);
@@ -80,6 +81,9 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
     if (!mounted) return;
   }
+
+  var _selected = '';
+  var _test = 'Full Screen';
 
   @override
   Widget build(BuildContext context) {
@@ -252,28 +256,28 @@ class _HomeCalendarState extends State<HomeCalendar> {
                               padding: EdgeInsets.zero,
                               icon: Icon(Icons.sentiment_satisfied),
                               color: const Color(0xffbbbbbb),
-                              onPressed: () => ExerciseDialog(),
+                              onPressed: () => _openDialog(_selectedDay, 1),
                             ),
                             IconButton(
                               constraints: BoxConstraints(maxHeight: 24),
                               padding: EdgeInsets.zero,
                               icon: Icon(Icons.sentiment_satisfied),
                               color: const Color(0xffbbbbbb),
-                              onPressed: () {},
+                              onPressed: () => _openDialog(_selectedDay, 2),
                             ),
                             IconButton(
                               constraints: BoxConstraints(maxHeight: 24),
                               padding: EdgeInsets.zero,
                               icon: Icon(Icons.sentiment_satisfied),
                               color: const Color(0xffbbbbbb),
-                              onPressed: () {},
+                              onPressed: () => _openDialog(_selectedDay, 3),
                             ),
                             IconButton(
                               constraints: BoxConstraints(maxHeight: 24),
                               padding: EdgeInsets.zero,
                               icon: Icon(Icons.sentiment_satisfied),
                               color: const Color(0xffbbbbbb),
-                              onPressed: () {},
+                              onPressed: () => _openDialog(_selectedDay, 4),
                             ),
                           ],
                         ),
@@ -287,6 +291,173 @@ class _HomeCalendarState extends State<HomeCalendar> {
         ),
       ),
     );
+  }
+
+  int value = 0;
+  var _selectedValue = null;
+  String inputs = '';
+
+  Widget CustomRadio(String text, int index) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          value = index;
+        });
+      },
+      child: Text(text),
+      style: ElevatedButton.styleFrom(
+        fixedSize: const Size(70, 50),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        primary:
+            (value == index) ? Color.fromARGB(255, 61, 67, 114) : Colors.grey,
+        elevation: 0.0,
+        textStyle: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Pretendard'),
+      ),
+    );
+  }
+
+  Widget _icon(int index, IconData icon) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: InkResponse(
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: _selectedValue == index
+                  ? Color.fromARGB(255, 61, 67, 114)
+                  : Colors.grey,
+              size: 60.0,
+            ),
+          ],
+        ),
+        onTap: () => setState(
+          () {
+            _selectedValue = index;
+          },
+        ),
+      ),
+    );
+  }
+
+  void _openDialog(DateTime date, int type) async {
+    _selectedValue =
+        (await Navigator.of(context).push(new MaterialPageRoute<String>(
+            builder: (BuildContext context) {
+              return new Scaffold(
+                appBar: new AppBar(
+                  title: const Text('식단 추가'),
+                  actions: [
+                    new ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop("hai");
+                        },
+                        child: Text(
+                          '추가',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ],
+                ),
+                body: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  padding: EdgeInsets.all(20),
+                  color: Colors.white,
+                  // child: Column(
+                  //   children: [
+                  //     ElevatedButton(
+                  //       onPressed: () {
+                  //         Navigator.of(context).pop();
+                  //       },
+                  //       child: Text(
+                  //         'Full Screen',
+                  //         style: TextStyle(color: Colors.white),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomRadio("아침", 1),
+                                SizedBox(width: 10),
+                                CustomRadio("점심", 2),
+                                SizedBox(width: 10),
+                                CustomRadio("저녁", 3),
+                                SizedBox(width: 10),
+                                CustomRadio("간식", 4),
+                              ]),
+                        ),
+                        Center(
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                child: TextField(
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Pretendard'),
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    hintText: '식단을 입력해주세요.',
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 61, 67, 114)),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 61, 67, 114)),
+                                    ),
+                                  ),
+                                  onChanged: (String str) {
+                                    setState(() => inputs = str);
+                                  },
+                                ),
+                                padding: EdgeInsets.only(top: 30, bottom: 20),
+                                width: 200,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _icon(0, Icons.sentiment_very_satisfied),
+                                  SizedBox(width: 5),
+                                  _icon(
+                                    1,
+                                    Icons.sentiment_satisfied,
+                                  ),
+                                  SizedBox(width: 5),
+                                  _icon(
+                                    2,
+                                    Icons.sentiment_very_dissatisfied,
+                                  ),
+                                ],
+                              ),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+            fullscreenDialog: true)))!;
+    if (_selectedValue != null)
+      setState(() {
+        _selectedValue = _selectedValue;
+      });
   }
 
   void ExerciseDialog() {

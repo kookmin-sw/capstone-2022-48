@@ -14,16 +14,14 @@ class AverDietScreen extends StatefulWidget {
 }
 
 class _AverDietScreenState extends State<AverDietScreen> {
-  bool isDay = false;
   bool isWeek = true;
   bool isMonth = false;
   late List<bool> isSelected;
-  List<bool> _selections = List.generate(3, (_) => false);
 
   int touchedIndex = -1;
 
   void initState() {
-    isSelected = [isDay, isWeek, isMonth];
+    isSelected = [isWeek, isMonth];
     super.initState();
   }
 
@@ -70,9 +68,6 @@ class _AverDietScreenState extends State<AverDietScreen> {
               children: [
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('오늘', style: TextStyle(fontSize: 14))),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text('최근 7일', style: TextStyle(fontSize: 14))),
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -80,15 +75,8 @@ class _AverDietScreenState extends State<AverDietScreen> {
               ],
               // isSelected: isSelected,
               // onPressed: toggleSelect,
-              isSelected: _selections,
-              onPressed: (int index) {
-                setState(() {
-                  // _selections[index] = !_selections[index];
-                  for (int i = 0; i < _selections.length; i++) {
-                    _selections[i] = i == index;
-                  }
-                });
-              },
+              isSelected: isSelected,
+              onPressed: toggleSelect,
               // renderBorder: false,
             ),
             SizedBox(
@@ -301,25 +289,6 @@ class _AverDietScreenState extends State<AverDietScreen> {
     );
   }
 
-  void toggleSelect(value) {
-    if (value == 0) {
-      isWeek = true;
-      isMonth = false;
-      isDay = false;
-    } else if (value == 1) {
-      isWeek = false;
-      isMonth = true;
-      isDay = false;
-    } else {
-      isWeek = false;
-      isMonth = false;
-      isDay = true;
-    }
-    setState(() {
-      isSelected = [isWeek, isMonth, isDay];
-    });
-  }
-
 //   List<PieChartSectionData> showingSections() {
 //     return List.generate(
 //       4,
@@ -443,6 +412,19 @@ class _AverDietScreenState extends State<AverDietScreen> {
         default:
           throw Error();
       }
+    });
+  }
+
+  void toggleSelect(value) {
+    if (value == 0) {
+      isWeek = true;
+      isMonth = false;
+    } else {
+      isWeek = false;
+      isMonth = true;
+    }
+    setState(() {
+      isSelected = [isWeek, isMonth];
     });
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'indicator.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AverDietScreen extends StatefulWidget {
   const AverDietScreen({Key? key}) : super(key: key);

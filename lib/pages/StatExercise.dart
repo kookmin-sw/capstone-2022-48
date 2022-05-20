@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AverExerScreen extends StatefulWidget {
   const AverExerScreen({Key? key}) : super(key: key);

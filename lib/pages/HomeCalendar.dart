@@ -90,192 +90,200 @@ class _HomeCalendarState extends State<HomeCalendar> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '오늘은 ' + _steps + ' 걸음',
-              style: TextStyle(
-                  fontSize: 30,
-                  fontFamily: 'Pretendard',
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              width: size.width * 0.9,
-              child: TableCalendar(
-                locale: 'ko-KR',
-
-                focusedDay: DateTime.now(),
-                firstDay: DateTime(2020),
-                lastDay: DateTime(2030),
-
-                selectedDayPredicate: (DateTime date) {
-                  return isSameDay(_selectedDay, date);
-                },
-                onDaySelected: (selectDay, focusDay) {
-                  setState(() {
-                    _selectedDay = selectDay;
-                    _focusedDay = focusDay;
-                  });
-                },
-
-                calendarFormat: _calendarFormat,
-                onFormatChanged: (format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                },
-
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                // daysOfWeekVisible: true,
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
-
-                // header style
-                headerVisible: true,
-                headerStyle: HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                  // centerHeaderTitle: true,
-                  leftChevronIcon: Icon(Icons.arrow_back_ios_rounded),
-                  rightChevronIcon: Icon(Icons.arrow_forward_ios_rounded),
-                  // titleTextStyle: const TextStyle(fontSize: 15.0),
+      backgroundColor: Color(0xffffffff),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '오늘은 ' + _steps + ' 걸음',
+                style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: size.width * 0.85,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xffeeeeee),
                 ),
-                daysOfWeekHeight: 20,
+                child: TableCalendar(
+                  locale: 'ko-KR',
 
-                // calendar style
-                calendarStyle: CalendarStyle(
-                  defaultTextStyle: TextStyle(color: Colors.grey),
-                  weekendTextStyle: TextStyle(color: Colors.grey),
-                  isTodayHighlighted: true,
+                  focusedDay: DateTime.now(),
+                  firstDay: DateTime(2020),
+                  lastDay: DateTime(2030),
 
-                  // selectedDecoration: BoxDecoration(
-                  //   color: Colors.blue,
-                  //   shape: BoxShape.circle,
-                  // ),
-                  // selectedTextStyle: TextStyle(color: Colors.white),
+                  selectedDayPredicate: (DateTime date) {
+                    return isSameDay(_selectedDay, date);
+                  },
+                  onDaySelected: (selectDay, focusDay) {
+                    setState(() {
+                      _selectedDay = selectDay;
+                      _focusedDay = focusDay;
+                    });
+                  },
 
-                  // today style
-                  todayDecoration: BoxDecoration(
-                      color: Color(0xffc1c1c1), shape: BoxShape.circle),
-                  // color: Color(0xff6fa8dc), shape: BoxShape.circle),
-                  todayTextStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xffffffff),
-                      fontSize: 16),
+                  calendarFormat: _calendarFormat,
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
 
-                  // selected day style
-                  selectedDecoration: BoxDecoration(
-                    color: Color(0xff6fa8dc),
-                    shape: BoxShape.circle,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  // daysOfWeekVisible: true,
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                  },
+
+                  // header style
+                  headerVisible: true,
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                    // centerHeaderTitle: true,
+                    leftChevronIcon: Icon(Icons.arrow_back_ios_rounded),
+                    rightChevronIcon: Icon(Icons.arrow_forward_ios_rounded),
+                    // titleTextStyle: const TextStyle(fontSize: 15.0),
                   ),
-                  selectedTextStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xffffffff),
-                      fontSize: 16),
+                  daysOfWeekHeight: 20,
+
+                  // calendar style
+                  calendarStyle: CalendarStyle(
+                    defaultTextStyle: TextStyle(color: Colors.grey),
+                    weekendTextStyle: TextStyle(color: Colors.grey),
+                    isTodayHighlighted: true,
+
+                    // selectedDecoration: BoxDecoration(
+                    //   color: Colors.blue,
+                    //   shape: BoxShape.circle,
+                    // ),
+                    // selectedTextStyle: TextStyle(color: Colors.white),
+
+                    // today style
+                    todayDecoration: BoxDecoration(
+                        color: Color(0xffc1c1c1), shape: BoxShape.circle),
+                    // color: Color(0xff6fa8dc), shape: BoxShape.circle),
+                    todayTextStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xffffffff),
+                        fontSize: 16),
+
+                    // selected day style
+                    selectedDecoration: BoxDecoration(
+                      color: Color(0xff6fa8dc),
+                      shape: BoxShape.circle,
+                    ),
+                    selectedTextStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xffffffff),
+                        fontSize: 16),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  width: size.width * 0.4,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color(0xffEEEEEE),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '운동 시간',
-                        style: TextStyle(
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        // 'data',
-                        // '${context.watch<ExerciseData>().time}',
-                        '${_exerciseHours}시간 ${_exerciseMinutes}분',
-                        style: TextStyle(
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    width: size.width * 0.4,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color(0xffeeeeee),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '운동 시간',
+                          style: TextStyle(
                             fontFamily: 'Pretendard',
-                            fontWeight: FontWeight.normal),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: size.width * 0.4,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color(0xffEEEEEE),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '식단',
-                        style: TextStyle(
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
-                      ),
-                      Row(
-                        // mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            constraints: BoxConstraints(maxWidth: 30),
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.sentiment_satisfied),
-                            color: const Color(0xffbbbbbb),
-                            onPressed: () => ExerciseDialog(),
-                          ),
-                          IconButton(
-                            constraints: BoxConstraints(maxHeight: 24),
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.sentiment_satisfied),
-                            color: const Color(0xffbbbbbb),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            constraints: BoxConstraints(maxHeight: 24),
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.sentiment_satisfied),
-                            color: const Color(0xffbbbbbb),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            constraints: BoxConstraints(maxHeight: 24),
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.sentiment_satisfied),
-                            color: const Color(0xffbbbbbb),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ],
+                        Text(
+                          // 'data',
+                          // '${context.watch<ExerciseData>().time}',
+                          '${_exerciseHours}시간 ${_exerciseMinutes}분',
+                          style: TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Container(
+                    width: size.width * 0.4,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color(0xffeeeeee),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '식단',
+                          style: TextStyle(
+                            fontFamily: 'Pretendard',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Row(
+                          // mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              constraints: BoxConstraints(maxWidth: 30),
+                              padding: EdgeInsets.zero,
+                              icon: Icon(Icons.sentiment_satisfied),
+                              color: const Color(0xffbbbbbb),
+                              onPressed: () => ExerciseDialog(),
+                            ),
+                            IconButton(
+                              constraints: BoxConstraints(maxHeight: 24),
+                              padding: EdgeInsets.zero,
+                              icon: Icon(Icons.sentiment_satisfied),
+                              color: const Color(0xffbbbbbb),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              constraints: BoxConstraints(maxHeight: 24),
+                              padding: EdgeInsets.zero,
+                              icon: Icon(Icons.sentiment_satisfied),
+                              color: const Color(0xffbbbbbb),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              constraints: BoxConstraints(maxHeight: 24),
+                              padding: EdgeInsets.zero,
+                              icon: Icon(Icons.sentiment_satisfied),
+                              color: const Color(0xffbbbbbb),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

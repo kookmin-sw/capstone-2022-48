@@ -8,6 +8,8 @@ import 'package:capstone_2022_48/model/DataModel.dart';
 import 'dart:io';
 import 'package:capstone_2022_48/model/DataModel.dart';
 import 'package:capstone_2022_48/pages/Diet.dart';
+import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeCalendar extends StatefulWidget {
   const HomeCalendar({Key? key}) : super(key: key);
@@ -77,15 +79,16 @@ class _HomeCalendarState extends State<HomeCalendar> {
     });
   }
 
-  void initPlatformState() {
-    _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
-    _pedestrianStatusStream
-        .listen(onPedestrianStatusChanged)
-        .onError(onPedestrianStatusError);
+  void initPlatformState() async {
+    if (await Permission.activityRecognition.request().isGranted) {
+      _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+      _pedestrianStatusStream
+          .listen(onPedestrianStatusChanged)
+          .onError(onPedestrianStatusError);
 
-    _stepCountStream = Pedometer.stepCountStream;
-    _stepCountStream.listen(onStepCount).onError(onStepCountError);
-
+      _stepCountStream = Pedometer.stepCountStream;
+      _stepCountStream.listen(onStepCount).onError(onStepCountError);
+    } else {}
     if (!mounted) return;
   }
 
@@ -246,7 +249,8 @@ class _HomeCalendarState extends State<HomeCalendar> {
                     // child: (_selectedDay == DateTime.now())
                     //     ? TodayDiet()
                     //     : FutureDiet(),
-                    child: ConditionalDiet(Whatday(_selectedDay!)),
+                    child: ConditionalDiet(Whatday(_selectedDay)),
+                    //_sectedDay! 오류나서 _selectedDay로 수정
                   ),
                 ],
               ),

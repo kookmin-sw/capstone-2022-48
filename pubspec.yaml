@@ -49,6 +49,8 @@ dependencies:
   syncfusion_flutter_gauges: ^20.1.55
   firebase_core: ^1.17.0
   firebase_auth: ^3.3.18
+  path_provider: ^2.0.0
+  permission_handler: ^9.2.0
 
 dev_dependencies:
   flutter_test:

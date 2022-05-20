@@ -20,7 +20,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(color: Color.fromARGB(255, 240, 231, 149)),
+        decoration: BoxDecoration(color: Colors.white),
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(

@@ -71,10 +71,10 @@ class _MainScreenState extends State<MainScreen> {
                   text: 'stats',
                 ),
               ],
-              indicator: BoxDecoration(
-                color: Color(0xff4675C0),
-              ),
-              labelColor: Color(0xffffffff),
+              // indicator: BoxDecoration(
+              //   color: Color(0xff4675C0),
+              // ),
+              labelColor: Color(0xff4675C0),
             ),
           ),
         ),

@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:capstone_2022_48/model/DataModel.dart';
 
 class Diet extends StatefulWidget {
   const Diet({Key? key}) : super(key: key);
@@ -12,6 +14,14 @@ class Diet extends StatefulWidget {
 }
 
 class _DietState extends State<Diet> {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late DietData _dietData;
+
+  DateTime date = DateTime.now();
+  late int type; // 1:아침 2:점심 3:저녁 4:간식
+  late String food;
+  late int score; // 1:bad 2:soso 3:good
+
   int value = 0;
   var _selected = null;
   String inputs = '';
@@ -21,6 +31,7 @@ class _DietState extends State<Diet> {
       onPressed: () {
         setState(() {
           value = index;
+          type = index;
         });
       },
       child: Text(text),
@@ -57,6 +68,7 @@ class _DietState extends State<Diet> {
         onTap: () => setState(
           () {
             _selected = index;
+            score = index;
           },
         ),
       ),
@@ -105,7 +117,10 @@ class _DietState extends State<Diet> {
                           ),
                         ),
                         onChanged: (String str) {
-                          setState(() => inputs = str);
+                          setState(() {
+                            inputs = str;
+                            food = str;
+                          });
                         },
                       ),
                       padding: EdgeInsets.only(top: 30, bottom: 20),
@@ -114,15 +129,18 @@ class _DietState extends State<Diet> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _icon(0, Icons.sentiment_very_satisfied),
-                        SizedBox(width: 5),
                         _icon(
-                          1,
-                          Icons.sentiment_satisfied,
+                          3,
+                          Icons.sentiment_very_satisfied,
                         ),
                         SizedBox(width: 5),
                         _icon(
                           2,
+                          Icons.sentiment_satisfied,
+                        ),
+                        SizedBox(width: 5),
+                        _icon(
+                          1,
                           Icons.sentiment_very_dissatisfied,
                         ),
                       ],
@@ -152,7 +170,11 @@ class _DietState extends State<Diet> {
                         ),
                         ElevatedButton.icon(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () {
+                            context
+                                .read<DietData>()
+                                .setDietData(date, type, food, score);
+                          },
                           label: Text('추가'),
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(100, 45),

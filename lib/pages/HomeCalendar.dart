@@ -6,6 +6,8 @@ import 'package:pedometer/pedometer.dart';
 import 'dart:async';
 import 'package:capstone_2022_48/model/DataModel.dart';
 import 'dart:io';
+import 'package:capstone_2022_48/model/DataModel.dart';
+import 'package:capstone_2022_48/pages/Diet.dart';
 
 class HomeCalendar extends StatefulWidget {
   const HomeCalendar({Key? key}) : super(key: key);
@@ -23,6 +25,11 @@ class _HomeCalendarState extends State<HomeCalendar> {
   };
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
+
+  bool _isToday = true;
+  bool _isPast = false;
+  bool _isFuture = false;
+  int _isDay = 0; // 0:오늘 1:오늘이전 2:오늘이후
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
@@ -121,6 +128,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
                   locale: 'ko-KR',
 
                   focusedDay: DateTime.now(),
+                  // focusedDay: DateTime(2022, 5, 18),
                   firstDay: DateTime(2020),
                   lastDay: DateTime(2030),
 
@@ -235,54 +243,10 @@ class _HomeCalendarState extends State<HomeCalendar> {
                       borderRadius: BorderRadius.circular(10),
                       color: Color(0xffeeeeee),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          '식단',
-                          style: TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Row(
-                          // mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              constraints: BoxConstraints(maxWidth: 30),
-                              padding: EdgeInsets.zero,
-                              icon: Icon(Icons.sentiment_satisfied),
-                              color: const Color(0xffbbbbbb),
-                              onPressed: () => _openDialog(_selectedDay, 1),
-                            ),
-                            IconButton(
-                              constraints: BoxConstraints(maxHeight: 24),
-                              padding: EdgeInsets.zero,
-                              icon: Icon(Icons.sentiment_satisfied),
-                              color: const Color(0xffbbbbbb),
-                              onPressed: () => _openDialog(_selectedDay, 2),
-                            ),
-                            IconButton(
-                              constraints: BoxConstraints(maxHeight: 24),
-                              padding: EdgeInsets.zero,
-                              icon: Icon(Icons.sentiment_satisfied),
-                              color: const Color(0xffbbbbbb),
-                              onPressed: () => _openDialog(_selectedDay, 3),
-                            ),
-                            IconButton(
-                              constraints: BoxConstraints(maxHeight: 24),
-                              padding: EdgeInsets.zero,
-                              icon: Icon(Icons.sentiment_satisfied),
-                              color: const Color(0xffbbbbbb),
-                              onPressed: () => _openDialog(_selectedDay, 4),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                    // child: (_selectedDay == DateTime.now())
+                    //     ? TodayDiet()
+                    //     : FutureDiet(),
+                    child: ConditionalDiet(Whatday(_selectedDay!)),
                   ),
                 ],
               ),
@@ -290,6 +254,199 @@ class _HomeCalendarState extends State<HomeCalendar> {
           ),
         ),
       ),
+    );
+  }
+
+  int Whatday(DateTime selectedDay) {
+    DateTime now = DateTime.now();
+    if (selectedDay.day == now.day &&
+        selectedDay.year == now.year &&
+        selectedDay.month == now.month) {
+      // if (selectedDay == now) {
+      return 1;
+      // } else if (now.isBefore(selectedDay)) {
+    } else if (selectedDay.isBefore(now)) {
+      return 2;
+      // } else if (now.isAfter(selectedDay)) {
+    } else if (selectedDay.isAfter(now)) {
+      return 3;
+    } else {
+      return 0;
+    }
+  }
+
+  Widget? ConditionalDiet(int b) {
+    if (b == 1) {
+      return TodayDiet();
+    } else if (b == 2) {
+      return PastDiet();
+    } else if (b == 3) {
+      return FutureDiet();
+    } else {
+      return null;
+    }
+  }
+
+  Widget TodayDiet() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          '식단',
+          style: TextStyle(
+            fontFamily: 'Pretendard',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        Row(
+          // mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              constraints: BoxConstraints(maxWidth: 30),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 1),
+              // onPressed: () => Diet(),
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 2),
+              // onPressed: () => Diet(),
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 3),
+              // onPressed: () => Diet(),
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 4),
+              // // onPressed: () => Diet(),
+              // onPressed: () => Navigator.push(
+              //     context, MaterialPageRoute(builder: (context) => Diet())),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget PastDiet() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          '과거 식단',
+          style: TextStyle(
+            fontFamily: 'Pretendard',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        Row(
+          // mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              constraints: BoxConstraints(maxWidth: 30),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 1),
+              // onPressed: () {},
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 2),
+              // onPressed: () {},
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 3),
+              // onPressed: () {},
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () => _openDialog(_selectedDay, 4),
+              // onPressed: () {},
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget FutureDiet() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          '이후 식단',
+          style: TextStyle(
+            fontFamily: 'Pretendard',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        Row(
+          // mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              constraints: BoxConstraints(maxWidth: 30),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () {},
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () {},
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () {},
+            ),
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.sentiment_satisfied),
+              color: const Color(0xffbbbbbb),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ],
     );
   }
 

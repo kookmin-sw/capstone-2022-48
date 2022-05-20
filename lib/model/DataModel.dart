@@ -71,6 +71,13 @@ class DietData extends ChangeNotifier {
   set score(int num) {
     _score = num;
   }
+
+  void setDietData(DateTime date, int type, String food, int score) {
+    _date = date;
+    _type = type;
+    _food = food;
+    _score = score;
+  }
 }
 
 class StepData extends ChangeNotifier {

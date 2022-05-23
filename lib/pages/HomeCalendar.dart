@@ -11,6 +11,7 @@ import 'package:capstone_2022_48/model/DataModel.dart';
 import 'package:capstone_2022_48/pages/Diet.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeCalendar extends StatefulWidget {
 //   final Future<Database> db;
@@ -97,11 +98,41 @@ class _HomeCalendarState extends State<HomeCalendar> {
   var _selected = '';
   var _test = 'Full Screen';
 
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  CollectionReference _collectionExercise =
+      FirebaseFirestore.instance.collection('ExerciseDataCollection');
+
+  CollectionReference _collectionDiet =
+      FirebaseFirestore.instance.collection('DietDataCollection');
+
+  CollectionReference _collectionSteps =
+      FirebaseFirestore.instance.collection('StepDataCollection');
+
+  Future<void> getData() async {
+    DateTime _now = DateTime.now();
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionExercise
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    // print(allData.elementAt(1));
+    print(allData);
+  }
+
+  int todayExerciseTimes = 0;
+
   @override
   Widget build(BuildContext context) {
-    int _exerciseMinutes = context.watch<ExerciseData>().time ~/ 60;
-    int _exerciseHours =
-        (_exerciseMinutes ~/ 60 == 0) ? 0 : _exerciseMinutes ~/ 60;
+    // getData();
+    // int _exerciseMinutes = context.watch<ExerciseData>().time ~/ 60;
+    // // int _exerciseMinutes = context.watch<ExerciseData>().time;
+    // int _exerciseHours =
+    //     (_exerciseMinutes ~/ 60 == 0) ? 0 : _exerciseMinutes ~/ 60;
 
     double _cal = context.watch<DietData>().calories;
 
@@ -115,13 +146,23 @@ class _HomeCalendarState extends State<HomeCalendar> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                '오늘은 ' + _steps + ' 걸음',
-                style: TextStyle(
-                    fontSize: 30,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.bold),
-              ),
+              // Text(
+              //   '오늘은 ' + (_selectedDay == DateTime.now())
+              //       ? _steps
+              //       : getStepsData(_selectedDay).toString() + ' 걸음',
+              //   style: TextStyle(
+              //       fontSize: 30,
+              //       fontFamily: 'Pretendard',
+              //       fontWeight: FontWeight.bold),
+              // ),
+              // Text(
+              //   '오늘은 ' + _steps + ' 걸음',
+              //   style: TextStyle(
+              //       fontSize: 30,
+              //       fontFamily: 'Pretendard',
+              //       fontWeight: FontWeight.bold),
+              // ),
+              getStepsFutureBuilder(),
               SizedBox(
                 height: 10,
               ),
@@ -213,72 +254,172 @@ class _HomeCalendarState extends State<HomeCalendar> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Container(
-                    width: size.width * 0.4,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xffeeeeee),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          '운동 시간',
-                          style: TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          // 'data',
-                          // '${context.watch<ExerciseData>().time}',
-                          '${_exerciseHours}시간 ${_exerciseMinutes}분',
-                          style: TextStyle(
-                              fontFamily: 'Pretendard',
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: size.width * 0.4,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xffeeeeee),
-                    ),
-                    // child: (_selectedDay == DateTime.now())
-                    //     ? TodayDiet()
-                    //     : FutureDiet(),
-                    // child: ConditionalDiet(Whatday(_selectedDay)),
-                    // child: Whatday(_selectedDay),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          '섭취 칼로리',
-                          style: TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          // 'data',
-                          // '${context.watch<ExerciseData>().time}',
-                          '${_cal.round()} 칼로리',
-                          style: TextStyle(
-                              fontFamily: 'Pretendard',
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    ),
-                    //_sectedDay! 오류나서 _selectedDay로 수정
-                  ),
+                  // todayExercise(),
+                  // FutureBuilder(
+                  //   future: exercisefromdb(),
+                  //   builder: (context, snapshot) {
+                  // DateTime _now = DateTime.now();
+                  // DateTime _start =
+                  //     DateTime(_now.year, _now.month, _now.day, 0, 0);
+                  // DateTime _end =
+                  //     DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+                  // QuerySnapshot querySnapshot = await _collectionRef
+                  //     .where('date', isGreaterThanOrEqualTo: _start)
+                  //     .where('date', isLessThanOrEqualTo: _end)
+                  //     .orderBy('date')
+                  //     .get();
+                  // final allData =
+                  //     querySnapshot.docs.map((doc) => doc.data()).toList();
+                  // // print(allData.elementAt(1));
+                  // // print(allData);
+
+                  // return Container(
+                  //   width: MediaQuery.of(context).size.width * 0.4,
+                  //   height: 100,
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     color: Color(0xffeeeeee),
+                  //   ),
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       Text(
+                  //         '운동 시간',
+                  //         style: TextStyle(
+                  //           fontFamily: 'Pretendard',
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 20,
+                  //         ),
+                  //       ),
+                  //       Text(
+                  //         // 'data',
+                  //         // '${context.watch<ExerciseData>().time}',
+                  //         // '${_exerciseHocurs}시간 ${_exerciseMinutes}분',
+                  //         'ㅏ하ㅏ하하하하',
+                  //         style: TextStyle(
+                  //             fontFamily: 'Pretendard',
+                  //             fontWeight: FontWeight.normal),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // );
+                  //   },
+                  // ),
+                  // FutureBuilder(
+                  //   future: getExerciseData(),
+                  //   builder: (context, snapshot) {
+                  //     int d = snapshot.data as int;
+                  //     int todayExerciseMinutes = d % 60;
+                  //     // print(todayExerciseMinutes);
+                  //     // int _exerciseMinutes = context.watch<ExerciseData>().time;
+                  //     int todayExerciseHours = d ~/ 60;
+
+                  //     return Container(
+                  //       width: MediaQuery.of(context).size.width * 0.4,
+                  //       height: 100,
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         color: Color(0xffeeeeee),
+                  //       ),
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: <Widget>[
+                  //           Text(
+                  //             '운동 시간',
+                  //             style: TextStyle(
+                  //               fontFamily: 'Pretendard',
+                  //               fontWeight: FontWeight.bold,
+                  //               fontSize: 20,
+                  //             ),
+                  //           ),
+                  //           Text(
+                  //             // 'data',
+                  //             // '${context.watch<ExerciseData>().time ~/ 60}',
+                  //             // '${_exerciseHocurs}시간 ${_exerciseMinutes}분',
+                  //             // 'ㅏ하ㅏ하하하하',
+                  //             // '${todayExerciseTimes}시간 ${todayExerciseTimes}분',
+                  //             '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+                  //             // '$docSnapshots[i]['time']',
+                  //             style: TextStyle(
+                  //                 fontFamily: 'Pretendard',
+                  //                 fontWeight: FontWeight.normal),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
+                  getExerciseFutureBuilder(),
+                  // Container(
+                  //   width: size.width * 0.4,
+                  //   height: 100,
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     color: Color(0xffeeeeee),
+                  //   ),
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       Text(
+                  //         '운동 시간',
+                  //         style: TextStyle(
+                  //           fontFamily: 'Pretendard',
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 20,
+                  //         ),
+                  //       ),
+                  //       Text(
+                  //         // 'data',
+                  //         // '${context.watch<ExerciseData>().time}',
+                  //         '${_exerciseHours}시간 ${_exerciseMinutes}분',
+                  //         style: TextStyle(
+                  //             fontFamily: 'Pretendard',
+                  //             fontWeight: FontWeight.normal),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  getCalFutureBuilder(),
+                  // Container(
+                  //   width: size.width * 0.4,
+                  //   height: 100,
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     color: Color(0xffeeeeee),
+                  //   ),
+                  //   // child: (_selectedDay == DateTime.now())
+                  //   //     ? TodayDiet()
+                  //   //     : FutureDiet(),
+                  //   // child: ConditionalDiet(Whatday(_selectedDay)),
+                  //   // child: Whatday(_selectedDay),
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       Text(
+                  //         '섭취 칼로리',
+                  //         style: TextStyle(
+                  //           fontFamily: 'Pretendard',
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 20,
+                  //         ),
+                  //       ),
+                  //       Text(
+                  //         // 'data',
+                  //         // '${context.watch<ExerciseData>().time}',
+                  //         '${_cal.round()} 칼로리',
+                  //         style: TextStyle(
+                  //             fontFamily: 'Pretendard',
+                  //             fontWeight: FontWeight.normal),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   //_sectedDay! 오류나서 _selectedDay로 수정
+                  // ),
                 ],
               ),
             ],
@@ -287,6 +428,457 @@ class _HomeCalendarState extends State<HomeCalendar> {
       ),
     );
   }
+
+  FutureBuilder getStepsFutureBuilder() {
+    return FutureBuilder(
+      future: getStepsData(_selectedDay),
+      builder: (context, snapshot) {
+        final int d = snapshot.data ?? 0;
+        // print(DateTime.now());
+
+        if (_selectedDay == DateTime.now()) {
+          // print(DateTime.now());
+          // if (_selectedDay == DateTime.now().toUtc().add(Duration(hours: -9))) {
+          return Text(
+            '오늘은 ' + _steps + ' 걸음',
+            style: TextStyle(
+                fontSize: 30,
+                fontFamily: 'Pretendard',
+                fontWeight: FontWeight.bold),
+          );
+        } else {
+          return Text(
+            '오늘은 ' + d.toString() + ' 걸음',
+            style: TextStyle(
+                fontSize: 30,
+                fontFamily: 'Pretendard',
+                fontWeight: FontWeight.bold),
+          );
+        }
+
+        // return Container(
+        //   width: MediaQuery.of(context).size.width * 0.4,
+        //   height: 100,
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(10),
+        //     color: Color(0xffeeeeee),
+        //   ),
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: <Widget>[
+        //       Text(
+        //         '운동 시간',
+        //         style: TextStyle(
+        //           fontFamily: 'Pretendard',
+        //           fontWeight: FontWeight.bold,
+        //           fontSize: 20,
+        //         ),
+        //       ),
+        //       Text(
+        //         // 'data',
+        //         // '${context.watch<ExerciseData>().time ~/ 60}',
+        //         // '${_exerciseHocurs}시간 ${_exerciseMinutes}분',
+        //         // 'ㅏ하ㅏ하하하하',
+        //         // '${todayExerciseTimes}시간 ${todayExerciseTimes}분',
+        //         '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+        //         // '$docSnapshots[i]['time']',
+        //         style: TextStyle(
+        //             fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+        //       ),
+        //     ],
+        //   ),
+        // );
+      },
+    );
+  }
+
+  FutureBuilder getCalFutureBuilder() {
+    return FutureBuilder(
+      future: getCalData(_selectedDay),
+      builder: (context, snapshot) {
+        final int d = snapshot.data ?? 0;
+        // int todayExerciseMinutes = d % 60;
+        // // print(todayExerciseMinutes);
+        // // int _exerciseMinutes = context.watch<ExerciseData>().time;
+        // int todayExerciseHours = d ~/ 60;
+
+        // return Container(
+        //   width: MediaQuery.of(context).size.width * 0.4,
+        //   height: 100,
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(10),
+        //     color: Color(0xffeeeeee),
+        //   ),
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: <Widget>[
+        //       Text(
+        //         '운동 시간',
+        //         style: TextStyle(
+        //           fontFamily: 'Pretendard',
+        //           fontWeight: FontWeight.bold,
+        //           fontSize: 20,
+        //         ),
+        //       ),
+        //       Text(
+        //         // 'data',
+        //         // '${context.watch<ExerciseData>().time ~/ 60}',
+        //         // '${_exerciseHocurs}시간 ${_exerciseMinutes}분',
+        //         // 'ㅏ하ㅏ하하하하',
+        //         // '${todayExerciseTimes}시간 ${todayExerciseTimes}분',
+        //         '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+        //         // '$docSnapshots[i]['time']',
+        //         style: TextStyle(
+        //             fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+        //       ),
+        //     ],
+        //   ),
+        // );
+        if (_selectedDay == DateTime.now()) {
+          // if (_selectedDay == DateTime.now().toUtc().add(Duration(hours: -9))) {
+          return Container(
+            width: MediaQuery.of(context).size.width * 0.4,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Color(0xffeeeeee),
+            ),
+            // child: (_selectedDay == DateTime.now())
+            //     ? TodayDiet()
+            //     : FutureDiet(),
+            // child: ConditionalDiet(Whatday(_selectedDay)),
+            // child: Whatday(_selectedDay),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '섭취 칼로리',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                Text(
+                  // 'data',
+                  '${context.watch<DietData>().calories}',
+                  // '${d.round()} 칼로리',
+                  style: TextStyle(
+                      fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+                ),
+              ],
+            ),
+            //_sectedDay! 오류나서 _selectedDay로 수정
+          );
+        } else {
+          return Container(
+            width: MediaQuery.of(context).size.width * 0.4,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Color(0xffeeeeee),
+            ),
+            // child: (_selectedDay == DateTime.now())
+            //     ? TodayDiet()
+            //     : FutureDiet(),
+            // child: ConditionalDiet(Whatday(_selectedDay)),
+            // child: Whatday(_selectedDay),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '섭취 칼로리',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                Text(
+                  // 'data',
+                  // '${context.watch<ExerciseData>().time}',
+                  '${d.round()} 칼로리',
+                  style: TextStyle(
+                      fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+                ),
+              ],
+            ),
+            //_sectedDay! 오류나서 _selectedDay로 수정
+          );
+        }
+      },
+    );
+  }
+
+  FutureBuilder getExerciseFutureBuilder() {
+    return FutureBuilder(
+      future: getExerciseData(_selectedDay),
+      builder: (context, snapshot) {
+        final int d = snapshot.data ?? 0;
+        int todayExerciseMinutes = d % 60;
+        // print(todayExerciseMinutes);
+        // int _exerciseMinutes = context.watch<ExerciseData>().time;
+        int todayExerciseHours = d ~/ 60;
+
+        return Container(
+          width: MediaQuery.of(context).size.width * 0.4,
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xffeeeeee),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '운동 시간',
+                style: TextStyle(
+                  fontFamily: 'Pretendard',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                // 'data',
+                // '${context.watch<ExerciseData>().time ~/ 60}',
+                // '${_exerciseHocurs}시간 ${_exerciseMinutes}분',
+                // 'ㅏ하ㅏ하하하하',
+                // '${todayExerciseTimes}시간 ${todayExerciseTimes}분',
+                '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+                // '$docSnapshots[i]['time']',
+                style: TextStyle(
+                    fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<int> getExerciseData(DateTime date) async {
+    // DateTime _now = date;
+    // DateTime _now = date.toUtc();
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionExercise
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    int return_int = 0;
+    int timess;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      // print(docSnapshots[i].data());
+      // int timess = docSnapshots[i]['time'];
+      // print(docSnapshots[i]['time']);
+      // print(timess);
+      // todayExerciseTimes += timess;
+      timess = docSnapshots[i]['time'];
+      // todayExerciseTimes += timess;
+      // print(todayExerciseTimes);
+      return_int += timess;
+    }
+
+    return return_int;
+  }
+
+  Future<int> getCalData(DateTime date) async {
+    // DateTime _now = date;
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionDiet
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    int return_int = 0;
+    int cals;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      // print(docSnapshots[i].data());
+      // int timess = docSnapshots[i]['time'];
+      // print(docSnapshots[i]['time']);
+      // print(timess);
+      // todayExerciseTimes += timess;
+      cals = docSnapshots[i]['cal'];
+      // todayExerciseTimes += timess;
+      // print(todayExerciseTimes);
+      return_int += cals;
+    }
+
+    return return_int;
+  }
+
+  Future<int> getStepsData(DateTime date) async {
+    // DateTime _now = date;
+
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+    // print(DateTime.now());
+
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionSteps
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    int return_int = 0;
+    int stepss;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      // print(docSnapshots[i].data());
+      // int timess = docSnapshots[i]['time'];
+      // print(docSnapshots[i]['time']);
+      // print(timess);
+      // todayExerciseTimes += timess;
+      stepss = docSnapshots[i]['step'];
+      // todayExerciseTimes += timess;
+      // print(todayExerciseTimes);
+      return_int += stepss;
+    }
+
+    return return_int;
+  }
+
+  // exercisefromdb() async {
+  //   // DateTime _now = DateTime.now();
+  //   // DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+  //   // DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+  //   // QuerySnapshot querySnapshot = await _collectionRef
+  //   //     .where('date', isGreaterThanOrEqualTo: _start)
+  //   //     .where('date', isLessThanOrEqualTo: _end)
+  //   //     .orderBy('date')
+  //   //     .get();
+  //   // var docSnapshots = querySnapshot.docs;
+
+  //   // int todayExerciseTimes = 0;
+
+  //   // for (int i = 0; i < docSnapshots.length; i++) {
+  //   //   // print(docSnapshots[i].data());
+  //   //   int timess = docSnapshots[i]['time'];
+  //   //   // print(docSnapshots[i]['time']);
+  //   //   // print(timess);
+  //   //   todayExerciseTimes += timess;
+  //   //   // print(todayExerciseTimes);
+  //   // }
+
+  //   // final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+  //   // final allData = querySnapshot.docs.map((doc) => doc.data());
+  //   // print(allData);
+  //   // return allData;
+  //   DateTime _now = DateTime.now();
+  //   DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+  //   DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+  //   QuerySnapshot querySnapshot = await _collectionRef
+  //       .where('date', isGreaterThanOrEqualTo: _start)
+  //       .where('date', isLessThanOrEqualTo: _end)
+  //       .orderBy('date')
+  //       .get();
+  //   final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+  //   // print(allData.elementAt(1));
+  //   // print(allData);
+
+  //   return Container(
+  //     width: MediaQuery.of(context).size.width * 0.4,
+  //     height: 100,
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(10),
+  //       color: Color(0xffeeeeee),
+  //     ),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: <Widget>[
+  //         Text(
+  //           '운동 시간',
+  //           style: TextStyle(
+  //             fontFamily: 'Pretendard',
+  //             fontWeight: FontWeight.bold,
+  //             fontSize: 20,
+  //           ),
+  //         ),
+  //         Text(
+  //           // 'data',
+  //           // '${context.watch<ExerciseData>().time}',
+  //           // '${_exerciseHocurs}시간 ${_exerciseMinutes}분',
+  //           'ㅏ하ㅏ하하하하',
+  //           style: TextStyle(
+  //               fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // Future<Widget> todayExercise() async {
+  //   DateTime _now = DateTime.now();
+  //   DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+  //   DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+  //   QuerySnapshot querySnapshot = await _collectionRef
+  //       .where('date', isGreaterThanOrEqualTo: _start)
+  //       .where('date', isLessThanOrEqualTo: _end)
+  //       .orderBy('date')
+  //       .get();
+  //   final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+  //   // print(allData.elementAt(1));
+  //   // print(allData);
+
+  //   return Container(
+  //     width: MediaQuery.of(context).size.width * 0.4,
+  //     height: 100,
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(10),
+  //       color: Color(0xffeeeeee),
+  //     ),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: <Widget>[
+  //         Text(
+  //           '운동 시간',
+  //           style: TextStyle(
+  //             fontFamily: 'Pretendard',
+  //             fontWeight: FontWeight.bold,
+  //             fontSize: 20,
+  //           ),
+  //         ),
+  //         Text(
+  //           // 'data',
+  //           // '${context.watch<ExerciseData>().time}',
+  //           // '${_exerciseHocurs}시간 ${_exerciseMinutes}분',
+  //           'ㅏ하ㅏ하하하하',
+  //           style: TextStyle(
+  //               fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   // int Whatday(DateTime selectedDay) {
   //   DateTime now = DateTime.now();

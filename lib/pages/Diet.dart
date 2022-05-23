@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_2022_48/model/DataModel.dart';
-import 'package:sqflite/sqflite.dart';
+// import 'package:sqflite/sqflite.dart';
 
 import '../Model/Food.dart';
 import 'HomeCalendar.dart';
@@ -124,7 +124,21 @@ class _DietState extends State<Diet> {
   //   //   );
   // }
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference dietdatas =
+      FirebaseFirestore.instance.collection('DietDataCollection');
+
+  Future<void> addFoodData() {
+    // Call the user's CollectionReference to add a new user
+    return dietdatas
+        .add({
+          'date': date,
+          'cal': diet_cal,
+        })
+        .then((value) => print("add food"))
+        .catchError((error) => print("Failed to add food: $error"));
+  }
+
   // late DietData _dietData;
   late List<DietData> _dietDataList;
 
@@ -135,6 +149,7 @@ class _DietState extends State<Diet> {
   int diet_type = 0; // 1:아침 2:점심 3:저녁 4:간식
   late String diet_food;
   int diet_score = 0; // 1:bad 2:soso 3:good
+  late int diet_cal;
 
   int value = 0;
   var _selected = null;
@@ -332,6 +347,8 @@ class _DietState extends State<Diet> {
                             dou = await test(diet_food);
                             // }
                             context.read<DietData>().addCalories(dou);
+                            diet_cal = dou.round();
+                            addFoodData();
                           },
                           label: Text('추가'),
                           style: ElevatedButton.styleFrom(
@@ -359,3 +376,74 @@ class _DietState extends State<Diet> {
     );
   }
 }
+
+// class FirestoreFirstDemoState extends State<FirestoreFirstDemo> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text("FirestoreFirstDemo")),
+//       body: Column(
+//         children: <Widget>[
+//           Container(
+//             height: 500,
+//             child: StreamBuilder<QuerySnapshot>(
+//               stream: Firestore.instance.collection("FirstDemo").snapshots(),
+//               builder: (BuildContext context,
+//                   AsyncSnapshot<QuerySnapshot> snapshot) {
+//                 if (snapshot.hasError) return Text("Error: ${snapshot.error}");
+//                 switch (snapshot.connectionState) {
+//                   case ConnectionState.waiting:
+//                     return Text("Loading...");
+//                   default:
+//                     return ListView(
+//                       children: snapshot.data.documents.map((DocumentSnapshot document) {
+//                         Timestamp tt = document["datetime"];
+//                         DateTime dt = DateTime.fromMicrosecondsSinceEpoch(
+//                             tt.microsecondsSinceEpoch);
+
+//                         return Card(
+//                           elevation: 2,
+//                           child: Container(
+//                             padding: const EdgeInsets.all(8),
+//                             child: Column(
+//                               children: <Widget>[
+//                                 Row(
+//                                   mainAxisAlignment:
+//                                       MainAxisAlignment.spaceBetween,
+//                                   children: <Widget>[
+//                                     Text(
+//                                       document["name"],
+//                                       style: TextStyle(
+//                                         color: Colors.blueGrey,
+//                                         fontSize: 17,
+//                                         fontWeight: FontWeight.bold,
+//                                       ),
+//                                     ),
+//                                     Text(
+//                                       dt.toString(),
+//                                       style: TextStyle(color: Colors.grey[600]),
+//                                     )
+//                                   ],
+//                                 ),
+//                                 Container(
+//                                   alignment: Alignment.centerLeft,
+//                                   child: Text(
+//                                     document["description"],
+//                                     style: TextStyle(color: Colors.black54),
+//                                   ),
+//                                 )
+//                               ],
+//                             ),
+//                           ),
+//                         );
+//                       }).toList(),
+//                     );
+//                 }
+//               },
+//             ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }

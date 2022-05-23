@@ -73,11 +73,19 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
             ToggleButtons(
               children: [
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('최근 7일', style: TextStyle(fontSize: 14))),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    '최근 7일',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('최근 30일', style: TextStyle(fontSize: 14))),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    '최근 30일',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
               ],
               // isSelected: isSelected,
               // onPressed: toggleSelect,
@@ -108,7 +116,8 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 24, bottom: 12),
                   child: LineChart(
-                    showAvg ? avgData() : mainData(),
+                    // showAvg ? avgData() : mainData(),
+                    showAvg ? mainData() : avgData(),
                   ),
                 ),
               ),
@@ -145,23 +154,8 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                     barPointers: [LinearBarPointer(value: 80)],
                   ),
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color(0xffdddddd),
-                  ),
-                  child: Text(
-                    '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+                // showAvg ? showMessage7() : showMessage30(),
+                showAvg ? showMessage30() : showMessage7(),
               ],
             ),
           ],
@@ -225,6 +219,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
   }
 
   LineChartData mainData() {
+    // 최근 30일
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -280,12 +275,9 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
         LineChartBarData(
           spots: const [
             FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
+            FlSpot(3, 2),
+            FlSpot(4, 5),
+            FlSpot(5, 3.1),
           ],
           isCurved: true,
           gradient: LinearGradient(
@@ -314,8 +306,9 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
   }
 
   LineChartData avgData() {
+    // 최근 7일
     return LineChartData(
-      lineTouchData: LineTouchData(enabled: false),
+      // lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
@@ -363,38 +356,35 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
           show: true,
           border: Border.all(color: const Color(0xff19335A), width: 1)),
       minX: 0,
-      maxX: 11,
+      maxX: 7,
       minY: 0,
-      maxY: 6,
+      maxY: 7,
       lineBarsData: [
         LineChartBarData(
           spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
+            FlSpot(0, 4),
+            FlSpot(2.6, 5),
+            FlSpot(4.9, 4),
+            FlSpot(6.8, 5),
           ],
           isCurved: true,
-          gradient: LinearGradient(
-            colors: [
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          barWidth: 5,
+          // gradient: LinearGradient(
+          //   colors: [
+          //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
+          //         .lerp(0.2)!,
+          //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
+          //         .lerp(0.2)!,
+          //   ],
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          // ),
+          barWidth: 4,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
-            show: true,
+            show: false,
             gradient: LinearGradient(
               colors: [
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
@@ -417,18 +407,58 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
     if (value == 0) {
       isWeek = true;
       isMonth = false;
+      showAvg = false;
+      print(showAvg);
     } else {
       isWeek = false;
       isMonth = true;
+      showAvg = true;
+      print(showAvg);
     }
     setState(() {
       isSelected = [isWeek, isMonth];
     });
   }
-}
 
-class SalesData {
-  SalesData(this.year, this.sales);
-  final String year;
-  final double sales;
+  Widget showMessage7() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.2,
+      width: MediaQuery.of(context).size.width * 0.4,
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Color(0xffdddddd),
+      ),
+      child: Text(
+        // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+        '7일 메세지',
+        style: TextStyle(
+          fontFamily: 'Pretendard',
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  Widget showMessage30() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.2,
+      width: MediaQuery.of(context).size.width * 0.4,
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Color(0xffdddddd),
+      ),
+      child: Text(
+        // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+        '30일 메세지',
+        style: TextStyle(
+          fontFamily: 'Pretendard',
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
 }

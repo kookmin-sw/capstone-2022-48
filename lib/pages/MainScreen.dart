@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:capstone_2022_48/pages/HomeCalendar.dart';
@@ -13,6 +14,8 @@ import 'package:capstone_2022_48/pages/ExercisePage.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
+  // const MainScreen({Key? key}) : super(key: key);
+
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
@@ -20,8 +23,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
+    // Future<Database> diet_database = initDatabase();
+
     initializeDateFormatting();
     return MaterialApp(
+      // initialRoute: '/',
+      // routes: {
+      //   '/': (context) => HomeCalendar(db: diet_database),
+      //   '/add': (context) => Diet(db: diet_database),
+      // },
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         // debugShowCheckedModeBanner: false,

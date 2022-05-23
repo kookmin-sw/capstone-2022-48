@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:pedometer/pedometer.dart';
 import 'dart:async';
@@ -12,6 +13,7 @@ import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HomeCalendar extends StatefulWidget {
+//   final Future<Database> db;
   const HomeCalendar({Key? key}) : super(key: key);
 
   @override
@@ -100,6 +102,8 @@ class _HomeCalendarState extends State<HomeCalendar> {
     int _exerciseMinutes = context.watch<ExerciseData>().time ~/ 60;
     int _exerciseHours =
         (_exerciseMinutes ~/ 60 == 0) ? 0 : _exerciseMinutes ~/ 60;
+
+    double _cal = context.watch<DietData>().calories;
 
     Size size = MediaQuery.of(context).size;
 
@@ -249,7 +253,30 @@ class _HomeCalendarState extends State<HomeCalendar> {
                     // child: (_selectedDay == DateTime.now())
                     //     ? TodayDiet()
                     //     : FutureDiet(),
-                    child: ConditionalDiet(Whatday(_selectedDay)),
+                    // child: ConditionalDiet(Whatday(_selectedDay)),
+                    // child: Whatday(_selectedDay),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '섭취 칼로리',
+                          style: TextStyle(
+                            fontFamily: 'Pretendard',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          // 'data',
+                          // '${context.watch<ExerciseData>().time}',
+                          '${_cal.round()} 칼로리',
+                          style: TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
                     //_sectedDay! 오류나서 _selectedDay로 수정
                   ),
                 ],
@@ -261,92 +288,115 @@ class _HomeCalendarState extends State<HomeCalendar> {
     );
   }
 
-  int Whatday(DateTime selectedDay) {
+  // int Whatday(DateTime selectedDay) {
+  //   DateTime now = DateTime.now();
+  //   if (selectedDay.day == now.day &&
+  //       selectedDay.year == now.year &&
+  //       selectedDay.month == now.month) {
+  //     // if (selectedDay == now) {
+  //     return 1;
+  //     // } else if (now.isBefore(selectedDay)) {
+  //   } else if (selectedDay.isBefore(now)) {
+  //     return 2;
+  //     // } else if (now.isAfter(selectedDay)) {
+  //   } else if (selectedDay.isAfter(now)) {
+  //     return 3;
+  //   } else {
+  //     return 0;
+  //   }
+  // }
+
+  Widget? Whatday(DateTime selectedDay) {
     DateTime now = DateTime.now();
+
+    // int diet_type;
+    // String diet_food;
+    // int diet_score;
+
     if (selectedDay.day == now.day &&
         selectedDay.year == now.year &&
         selectedDay.month == now.month) {
       // if (selectedDay == now) {
-      return 1;
+      // return TodayDiet();
       // } else if (now.isBefore(selectedDay)) {
     } else if (selectedDay.isBefore(now)) {
-      return 2;
+      return PastDiet();
       // } else if (now.isAfter(selectedDay)) {
     } else if (selectedDay.isAfter(now)) {
-      return 3;
-    } else {
-      return 0;
-    }
-  }
-
-  Widget? ConditionalDiet(int b) {
-    if (b == 1) {
-      return TodayDiet();
-    } else if (b == 2) {
-      return PastDiet();
-    } else if (b == 3) {
       return FutureDiet();
     } else {
       return null;
     }
   }
 
-  Widget TodayDiet() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          '식단',
-          style: TextStyle(
-            fontFamily: 'Pretendard',
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        Row(
-          // mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              constraints: BoxConstraints(maxWidth: 30),
-              padding: EdgeInsets.zero,
-              icon: Icon(Icons.sentiment_satisfied),
-              color: const Color(0xffbbbbbb),
-              onPressed: () => _openDialog(_selectedDay, 1),
-              // onPressed: () => Diet(),
-            ),
-            IconButton(
-              constraints: BoxConstraints(maxHeight: 24),
-              padding: EdgeInsets.zero,
-              icon: Icon(Icons.sentiment_satisfied),
-              color: const Color(0xffbbbbbb),
-              onPressed: () => _openDialog(_selectedDay, 2),
-              // onPressed: () => Diet(),
-            ),
-            IconButton(
-              constraints: BoxConstraints(maxHeight: 24),
-              padding: EdgeInsets.zero,
-              icon: Icon(Icons.sentiment_satisfied),
-              color: const Color(0xffbbbbbb),
-              onPressed: () => _openDialog(_selectedDay, 3),
-              // onPressed: () => Diet(),
-            ),
-            IconButton(
-              constraints: BoxConstraints(maxHeight: 24),
-              padding: EdgeInsets.zero,
-              icon: Icon(Icons.sentiment_satisfied),
-              color: const Color(0xffbbbbbb),
-              onPressed: () => _openDialog(_selectedDay, 4),
-              // // onPressed: () => Diet(),
-              // onPressed: () => Navigator.push(
-              //     context, MaterialPageRoute(builder: (context) => Diet())),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  // Widget? ConditionalDiet(int b) {
+  //   if (b == 1) {
+  //     return TodayDiet(${diet_type}, $diet_food $diet_score);
+  //   } else if (b == 2) {
+  //     return PastDiet();
+  //   } else if (b == 3) {
+  //     return FutureDiet();
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+  // Widget TodayDiet() {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: <Widget>[
+  //       Text(
+  //         '식단',
+  //         style: TextStyle(
+  //           fontFamily: 'Pretendard',
+  //           fontWeight: FontWeight.bold,
+  //           fontSize: 20,
+  //         ),
+  //       ),
+  //       Row(
+  //         // mainAxisSize: MainAxisSize.min,
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           IconButton(
+  //             constraints: BoxConstraints(maxWidth: 30),
+  //             padding: EdgeInsets.zero,
+  //             icon: Icon(Icons.sentiment_satisfied),
+  //             color: const Color(0xffbbbbbb),
+  //             onPressed: () => _openDialog(_selectedDay, 1),
+  //             // onPressed: () => Diet(),
+  //           ),
+  //           IconButton(
+  //             constraints: BoxConstraints(maxHeight: 24),
+  //             padding: EdgeInsets.zero,
+  //             icon: Icon(Icons.sentiment_satisfied),
+  //             color: const Color(0xffbbbbbb),
+  //             onPressed: () => _openDialog(_selectedDay, 2),
+  //             // onPressed: () => Diet(),
+  //           ),
+  //           IconButton(
+  //             constraints: BoxConstraints(maxHeight: 24),
+  //             padding: EdgeInsets.zero,
+  //             icon: Icon(Icons.sentiment_satisfied),
+  //             color: const Color(0xffbbbbbb),
+  //             onPressed: () => _openDialog(_selectedDay, 3),
+  //             // onPressed: () => Diet(),
+  //           ),
+  //           IconButton(
+  //             constraints: BoxConstraints(maxHeight: 24),
+  //             padding: EdgeInsets.zero,
+  //             icon: Icon(Icons.sentiment_satisfied),
+  //             color: const Color(0xffbbbbbb),
+  //             onPressed: () => _openDialog(_selectedDay, 4),
+  //             // // onPressed: () => Diet(),
+  //             // onPressed: () => Navigator.push(
+  //             //     context, MaterialPageRoute(builder: (context) => Diet())),
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget PastDiet() {
     return Column(
@@ -688,3 +738,120 @@ class _HomeCalendarState extends State<HomeCalendar> {
         });
   }
 }
+
+// class Whatday extends StatelessWidget {
+//   DateTime selectedDay;
+//   DateTime now = DateTime.now();
+
+//   int diet_type;
+//   String diet_food;
+//   int diet_score;
+
+//   Whatday({
+//     Key? key,
+//     required this.selectedDay,
+//     required this.diet_type,
+//     required this.diet_food,
+//     required diet_score,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     if (selectedDay.day == DateTime.now().day &&
+//         selectedDay.year == now.year &&
+//         selectedDay.month == now.month) {
+//       // if (selectedDay == now) {
+//       return TodayDiet();
+//       // } else if (now.isBefore(selectedDay)) {
+//     } else if (selectedDay.isBefore(DateTime.now())) {
+//       return PastDiet();
+//       // } else if (now.isAfter(selectedDay)) {
+//     } else if (selectedDay.isAfter(DateTime.now())) {
+//       return FutureDiet();
+//     } else {
+//       return null;
+//     }
+//   }
+// }
+
+// class TodayDiet extends StatelessWidget {
+//   int diet_type;
+//   String diet_food;
+//   int diet_score;
+
+//   TodayDiet(
+//       {Key? key,
+//       required this.diet_type,
+//       required this.diet_food,
+//       required this.diet_score})
+//       : super(key: key);
+
+//   Widget dietIcon(int type) {
+//     return IconButton(
+//       constraints: BoxConstraints(maxWidth: 30),
+//       padding: EdgeInsets.zero,
+//       icon: Icon(Icons.sentiment_satisfied),
+//       color: const Color(0xffbbbbbb),
+//       // onPressed: () => _openDialog(_selectedDay, 1),
+//       onPressed: () => Diet(db: ),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: <Widget>[
+//         Text(
+//           '식단',
+//           style: TextStyle(
+//             fontFamily: 'Pretendard',
+//             fontWeight: FontWeight.bold,
+//             fontSize: 20,
+//           ),
+//         ),
+//         Row(
+//           // mainAxisSize: MainAxisSize.min,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             IconButton(
+//               constraints: BoxConstraints(maxWidth: 30),
+//               padding: EdgeInsets.zero,
+//               icon: Icon(Icons.sentiment_satisfied),
+//               color: const Color(0xffbbbbbb),
+//               // onPressed: () => _openDialog(_selectedDay, 1),
+//               onPressed: () => Diet(),
+//             ),
+//             IconButton(
+//               constraints: BoxConstraints(maxHeight: 24),
+//               padding: EdgeInsets.zero,
+//               icon: Icon(Icons.sentiment_satisfied),
+//               color: const Color(0xffbbbbbb),
+//               // onPressed: () => _openDialog(_selectedDay, 2),
+//               onPressed: () => Diet(),
+//             ),
+//             IconButton(
+//               constraints: BoxConstraints(maxHeight: 24),
+//               padding: EdgeInsets.zero,
+//               icon: Icon(Icons.sentiment_satisfied),
+//               color: const Color(0xffbbbbbb),
+//               // onPressed: () => _openDialog(_selectedDay, 3),
+//               onPressed: () => Diet(),
+//             ),
+//             IconButton(
+//               constraints: BoxConstraints(maxHeight: 24),
+//               padding: EdgeInsets.zero,
+//               icon: Icon(Icons.sentiment_satisfied),
+//               color: const Color(0xffbbbbbb),
+//               // onPressed: () => _openDialog(_selectedDay, 4),
+//               onPressed: () => Diet(),
+//               // onPressed: () => Navigator.push(
+//               //     context, MaterialPageRoute(builder: (context) => Diet())),
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }

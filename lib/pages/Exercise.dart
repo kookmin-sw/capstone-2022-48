@@ -13,7 +13,7 @@ class StopWatch extends StatefulWidget {
 }
 
 class _StopWatchState extends State<StopWatch> {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   late ExerciseData _exerciseData;
 
@@ -40,6 +40,21 @@ class _StopWatchState extends State<StopWatch> {
   };
 
   String _selectedValue = '운동 선택';
+
+  CollectionReference exercisedatas =
+      FirebaseFirestore.instance.collection('ExerciseDataCollection');
+
+  Future<void> addExerciseData() {
+    // Call the user's CollectionReference to add a new user
+    return exercisedatas
+        .add({
+          'date': _today,
+          'time': _stopWatchTimer.secondTime.value ~/ 60,
+          'type': _exerciseList[_selectedValue],
+        })
+        .then((value) => print("add exercise"))
+        .catchError((error) => print("Failed to add food: $error"));
+  }
 
   @override
   void dispose() {
@@ -187,15 +202,16 @@ class _StopWatchState extends State<StopWatch> {
                         _stopWatchTimer.onExecute.add(StopWatchExecute.lap);
                         // print(_stopWatchTimer.rawTime.value);
                         // print(_stopWatchTimer.minuteTime.value);
-                        print(_stopWatchTimer.secondTime.value);
+                        print(_stopWatchTimer.secondTime.value ~/ 60);
                         context
                             .read<ExerciseData>()
                             .addTime(_stopWatchTimer.secondTime.value);
-                        firestore.collection('ExerciseDataCollection').add({
-                          'date': _today,
-                          'type': _exerciseList[_selectedValue],
-                          'time': _stopWatchTimer.secondTime.value
-                        });
+                        addExerciseData();
+                        // firestore.collection('ExerciseDataCollection').add({
+                        //   'date': _today,
+                        //   'type': _exerciseList[_selectedValue],
+                        //   'time': _stopWatchTimer.secondTime.value
+                        // });
                         // String hours = StopWatchTimer.getDisplayTimeHours(value);
                         // _exerciseData
                         //     .addTime(StopWatchTimer.getDisplayTime(value));

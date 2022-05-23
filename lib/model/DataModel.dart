@@ -42,6 +42,7 @@ class DietData extends ChangeNotifier {
   late int _type; // 0 = 아침 1 = 점심 2 = 저녁 3 = 간식
   late String _food;
   late int _score; // 0 = bad 1 = soso 2 = good
+  double _calories = 0;
 
   // final _iconList = {
   //   1: Icon(Icons.sentiment_very_satisfied, color: Color(0xffFFCD00)),
@@ -54,6 +55,7 @@ class DietData extends ChangeNotifier {
   int get type => _type;
   String get food => _food;
   int get score => _score;
+  double get calories => _calories;
   // Map<int, Icon> get iconList => _iconList;
 
   set date(DateTime date) {
@@ -72,11 +74,16 @@ class DietData extends ChangeNotifier {
     _score = num;
   }
 
-  void setDietData(DateTime date, int type, String food, int score) {
-    _date = date;
-    _type = type;
-    _food = food;
-    _score = score;
+  // void setDietData(DateTime date, int type, String food, int score) {
+  //   _date = date;
+  //   _type = type;
+  //   _food = food;
+  //   _score = score;
+  // }
+
+  void addCalories(double num) {
+    _calories += num;
+    notifyListeners();
   }
 }
 

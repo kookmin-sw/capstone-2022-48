@@ -161,6 +161,9 @@ class _StopWatchState extends State<StopWatch> {
                       icon: Icon(Icons.close),
                       onPressed: () {
                         _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
+                        setState(() {
+                          _selectedValue = '운동 선택';
+                        });
                       },
                       label: Text('리셋'),
                       style: ElevatedButton.styleFrom(

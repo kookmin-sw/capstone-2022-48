@@ -4,6 +4,7 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_2022_48/model/DataModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:capstone_2022_48/drawer/main_drawer.dart';
 
 class StopWatch extends StatefulWidget {
   const StopWatch({Key? key}) : super(key: key);
@@ -237,6 +238,7 @@ class _StopWatchState extends State<StopWatch> {
           ),
         ),
       ),
+      //drawer: MainDrawer(),
     );
   }
 }

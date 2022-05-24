@@ -5,7 +5,8 @@ import 'package:capstone_2022_48/reusable_widgets/reusable_widget.dart';
 import 'package:capstone_2022_48/pages/Signup_screen.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  // const SignInScreen({Key? key}) : super(key: key);
+  static final route = 'signin-screen';
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();

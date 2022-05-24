@@ -51,7 +51,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
                   onPressed: () {},
                 ),
                 Text(
-                  '평균 운동 시간',
+                  '운동시간 통계',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontWeight: FontWeight.bold,
@@ -70,6 +70,8 @@ class _AverExerScreenState extends State<AverExerScreen> {
               height: 15.0,
             ),
             ToggleButtons(
+              fillColor: Color(0xff8CAAD8),
+              selectedColor: Color(0xffffffff),
               children: [
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -87,8 +89,8 @@ class _AverExerScreenState extends State<AverExerScreen> {
             SizedBox(
               height: 15.0,
             ),
-            AspectRatio(
-              aspectRatio: 1.5,
+            Flexible(
+              flex: 2,
               child: Container(
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
@@ -99,12 +101,13 @@ class _AverExerScreenState extends State<AverExerScreen> {
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 24, bottom: 12),
                   child: LineChart(
-                    showAvg ? avgData() : mainData(),
+                    showAvg ? monthData() : weekData(),
                   ),
                 ),
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // SfRadialGauge(axes: <RadialAxis>[
                 //   RadialAxis(minimum: 0, maximum: 100, ranges: <GaugeRange>[
@@ -177,53 +180,43 @@ class _AverExerScreenState extends State<AverExerScreen> {
                 //     ],
                 //   ),
                 // ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  child: SfLinearGauge(
-                    axisLabelStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 10,
-                        fontStyle: FontStyle.italic,
-                        fontFamily: 'Pretendard'),
-                    interval: 20,
-                    markerPointers: [
-                      LinearShapePointer(
-                        // value: 50,
-                        value: shapePointerValue,
-                        onChanged: (value) {
-                          setState(() {
-                            shapePointerValue = value;
-                          });
-                        },
-                      ),
-                    ],
-                    // ranges: [
-                    //   LinearGaugeRange(
-                    //     startValue: 0,
-                    //     endValue: 100,
-                    //   ),
-                    // ],
-                    barPointers: [LinearBarPointer(value: 80)],
+                // Container(
+                //   // height: MediaQuery.of(context).size.height * 0.2,
+                //   // width: MediaQuery.of(context).size.width * 0.4,
+                //   child: SfLinearGauge(
+                //     axisLabelStyle: TextStyle(
+                //         color: Colors.black,
+                //         fontSize: 10,
+                //         fontStyle: FontStyle.italic,
+                //         fontFamily: 'Pretendard'),
+                //     interval: 20,
+                //     markerPointers: [
+                //       LinearShapePointer(
+                //         // value: 50,
+                //         value: shapePointerValue,
+                //         onChanged: (value) {
+                //           setState(() {
+                //             shapePointerValue = value;
+                //           });
+                //         },
+                //       ),
+                //     ],
+                //     // ranges: [
+                //     //   LinearGaugeRange(
+                //     //     startValue: 0,
+                //     //     endValue: 100,
+                //     //   ),
+                //     // ],
+                //     barPointers: [LinearBarPointer(value: 80)],
+                //   ),
+                // ),
+                Text(
+                  '💡',
+                  style: TextStyle(
+                    fontSize: 24,
                   ),
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color(0xffdddddd),
-                  ),
-                  child: Text(
-                    '평균 권장 섭취율보다 n% 많이 섭취했어요! 탄수화물을 과다 섭취하면 비만, 고혈압의 위험이 있어요😥',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+                showAvg ? showMessage30() : showMessage7()
               ],
             ),
           ],
@@ -232,7 +225,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
     );
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  Widget bottomTitleWidgets30(double value, TitleMeta meta) {
     const style = TextStyle(
       fontFamily: 'Pretendard',
       color: Color(0xff000000),
@@ -241,14 +234,61 @@ class _AverExerScreenState extends State<AverExerScreen> {
     );
     Widget text;
     switch (value.toInt()) {
+      case 0:
+        text = const Text('-5', style: style);
+        break;
+      case 1:
+        text = const Text('-4', style: style);
+        break;
       case 2:
-        text = const Text('3월', style: style);
+        text = const Text('-3', style: style);
+        break;
+      case 3:
+        text = const Text('-2', style: style);
+        break;
+      case 4:
+        text = const Text('-1', style: style);
         break;
       case 5:
-        text = const Text('4월', style: style);
+        text = const Text('0', style: style);
         break;
-      case 8:
-        text = const Text('5월', style: style);
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+
+    return Padding(child: text, padding: const EdgeInsets.only(top: 8.0));
+  }
+
+  Widget bottomTitleWidgets7(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontFamily: 'Pretendard',
+      color: Color(0xff000000),
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text = const Text('-6', style: style);
+        break;
+      case 1:
+        text = const Text('-5', style: style);
+        break;
+      case 2:
+        text = const Text('-4', style: style);
+        break;
+      case 3:
+        text = const Text('-3', style: style);
+        break;
+      case 4:
+        text = const Text('-2', style: style);
+        break;
+      case 5:
+        text = const Text('-1', style: style);
+        break;
+      case 6:
+        text = const Text('0', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -270,11 +310,17 @@ class _AverExerScreenState extends State<AverExerScreen> {
       case 1:
         text = '1시간';
         break;
-      case 3:
+      case 2:
         text = '2시간';
         break;
-      case 5:
+      case 3:
         text = '3시간';
+        break;
+      case 4:
+        text = '4시간';
+        break;
+      case 5:
+        text = '5시간';
         break;
       default:
         return Container();
@@ -283,7 +329,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  LineChartData mainData() {
+  LineChartData monthData() {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -316,7 +362,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
             showTitles: true,
             reservedSize: 30,
             interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
+            getTitlesWidget: bottomTitleWidgets30,
           ),
         ),
         leftTitles: AxisTitles(
@@ -332,33 +378,32 @@ class _AverExerScreenState extends State<AverExerScreen> {
           show: true,
           border: Border.all(color: const Color(0xff19335A), width: 1)),
       minX: 0,
-      maxX: 11,
+      maxX: 4,
       minY: 0,
-      maxY: 6,
+      maxY: 5,
       lineBarsData: [
         LineChartBarData(
           spots: const [
             FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
+            FlSpot(1, 2),
+            FlSpot(2, 5),
+            FlSpot(3, 3.1),
+            FlSpot(4, 4),
           ],
-          isCurved: true,
+          color: Color(0xff19335A),
+          isCurved: false,
           gradient: LinearGradient(
             colors: gradientColors,
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
-          barWidth: 5,
+          barWidth: 4,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
-            show: true,
+            show: false,
             gradient: LinearGradient(
               colors: gradientColors
                   .map((color) => color.withOpacity(0.3))
@@ -372,7 +417,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
     );
   }
 
-  LineChartData avgData() {
+  LineChartData weekData() {
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
@@ -382,13 +427,13 @@ class _AverExerScreenState extends State<AverExerScreen> {
         horizontalInterval: 1,
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: const Color(0xff19335A),
+            color: const Color(0xff000000),
             strokeWidth: 1,
           );
         },
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: const Color(0xff19335A),
+            color: const Color(0xff000000),
             strokeWidth: 1,
           );
         },
@@ -399,7 +444,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
+            getTitlesWidget: bottomTitleWidgets7,
             interval: 1,
           ),
         ),
@@ -422,21 +467,21 @@ class _AverExerScreenState extends State<AverExerScreen> {
           show: true,
           border: Border.all(color: const Color(0xff19335A), width: 1)),
       minX: 0,
-      maxX: 11,
+      maxX: 6,
       minY: 0,
-      maxY: 6,
+      maxY: 5,
       lineBarsData: [
         LineChartBarData(
           spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
+            FlSpot(0, 3),
+            FlSpot(1, 1),
+            FlSpot(2, 5),
+            FlSpot(3, 4.7),
+            FlSpot(4, 3),
+            FlSpot(5, 2.5),
+            FlSpot(6, 4),
           ],
-          isCurved: true,
+          isCurved: false,
           gradient: LinearGradient(
             colors: [
               ColorTween(begin: gradientColors[0], end: gradientColors[1])
@@ -447,13 +492,14 @@ class _AverExerScreenState extends State<AverExerScreen> {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
-          barWidth: 5,
+          color: Color(0xff19335A),
+          barWidth: 4,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
-            show: true,
+            show: false,
             gradient: LinearGradient(
               colors: [
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
@@ -476,12 +522,68 @@ class _AverExerScreenState extends State<AverExerScreen> {
     if (value == 0) {
       isWeek = true;
       isMonth = false;
+      showAvg = false;
     } else {
       isWeek = false;
       isMonth = true;
+      showAvg = true;
     }
     setState(() {
       isSelected = [isWeek, isMonth];
     });
+  }
+
+  Widget showMessage7() {
+    var avgExersForWeek = 134;
+    var avgExersForWeekMinutes = avgExersForWeek % 60;
+    var avgExersForWeekHours = avgExersForWeek ~/ 60;
+
+    return Flexible(
+      flex: 1,
+      child: Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Color(0xffdddddd),
+        ),
+        child: Text(
+          // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+          '최근 7일간 평균적으로 ${avgExersForWeekHours}시간 ${avgExersForWeekMinutes}분만큼 운동하셨어요!',
+          style: TextStyle(
+            fontFamily: 'Pretendard',
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget showMessage30() {
+    var avgExersForMonth = 95;
+    var avgExersForMonthMinutes = avgExersForMonth % 60;
+    var avgExersForMonthHours = avgExersForMonth ~/ 60;
+    return Flexible(
+      flex: 1,
+      child: Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Color(0xffdddddd),
+        ),
+        child: Text(
+          // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+          // '30일 메세지',
+          // '최근 30일간 평균적으로 ${avgExersForMonth}만큼 운동하셨어요!',
+          '최근 7일간 평균적으로 ${avgExersForMonthHours}시간 ${avgExersForMonthMinutes}분만큼 운동하셨어요!',
+
+          style: TextStyle(
+            fontFamily: 'Pretendard',
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
   }
 }

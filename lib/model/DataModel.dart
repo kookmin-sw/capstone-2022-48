@@ -92,3 +92,18 @@ class StepData extends ChangeNotifier {
 
   int get steps => _steps;
 }
+
+class UserData extends ChangeNotifier {
+  late String _email;
+  late int gender;
+  late int age;
+  late double cm;
+  late double kg;
+  late int usual;
+
+  late double bmi;
+  late double bmr; // 기초대사량
+  late double amr; // 활동대사량
+  late int suggestedKcal; // 권장or목표 칼로리 섭취량
+
+}

@@ -16,8 +16,7 @@ import 'package:capstone_2022_48/model/DataModel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:capstone_2022_48/pages/profile_screen.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -174,6 +173,11 @@ class MyApp extends StatelessWidget {
         child: MainScreen(),
       ),
       // home: SignInScreen(),
+      routes: {
+        SignInScreen.route: (_) => SignInScreen(),
+        HomeCalendar.route: (_) => HomeCalendar(),
+        ProfileScreen.route: (_) => ProfileScreen(),
+      },
       // home: MainScreen(),
     );
   }

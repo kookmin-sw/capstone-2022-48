@@ -14,6 +14,8 @@ import 'package:dio/dio.dart';
 import 'package:capstone_2022_48/Model/FoodRepository.dart';
 import 'package:capstone_2022_48/Model/Food.dart';
 
+import 'package:capstone_2022_48/drawer/main_drawer.dart';
+
 class Diet extends StatefulWidget {
   // final Future<Database> db;
   const Diet({Key? key}) : super(key: key);
@@ -23,6 +25,8 @@ class Diet extends StatefulWidget {
 }
 
 class _DietState extends State<Diet> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -209,23 +213,46 @@ class _DietState extends State<Diet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      key: _scaffoldKey,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.bottomCenter,
+            // body: SafeArea(
+            //   child: Center(
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              // Container(
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       CustomRadio("아침", 1),
+              //       SizedBox(width: 10),
+              //       CustomRadio("점심", 2),
+              //       SizedBox(width: 10),
+              //       CustomRadio("저녁", 3),
+              //       SizedBox(width: 10),
+              //       CustomRadio("간식", 4),
+              //     ],
+              //   ),
+              // ),
               Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomRadio("아침", 1),
-                    SizedBox(width: 10),
-                    CustomRadio("점심", 2),
-                    SizedBox(width: 10),
-                    CustomRadio("저녁", 3),
-                    SizedBox(width: 10),
-                    CustomRadio("간식", 4),
-                  ],
+                height: 300,
+                width: double.infinity,
+                color: Colors.white,
+              ),
+              Positioned(
+                top: 5,
+                left: 20,
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  iconSize: 30,
+                  color: Colors.grey,
+                  onPressed: () {
+                    _scaffoldKey.currentState?.openDrawer();
+                  },
                 ),
               ),
               Center(
@@ -371,8 +398,10 @@ class _DietState extends State<Diet> {
               ),
             ],
           ),
-        ),
+          // ),
+        ],
       ),
+      drawer: MainDrawer(),
     );
   }
 }

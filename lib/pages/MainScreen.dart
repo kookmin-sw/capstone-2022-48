@@ -11,6 +11,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:capstone_2022_48/pages/ExercisePage.dart';
 
+import 'package:capstone_2022_48/pages/profile_screen.dart';
+import 'package:capstone_2022_48/drawer/main_drawer.dart';
+import 'package:capstone_2022_48/pages/Signin_screen.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -87,8 +91,14 @@ class _MainScreenState extends State<MainScreen> {
               labelColor: Color(0xff4675C0),
             ),
           ),
+          drawer: MainDrawer(),
         ),
       ),
+      // routes: {
+      //   SignInScreen.route: (_) => SignInScreen(),
+      //   HomeCalendar.route: (_) => HomeCalendar(),
+      //   ProfileScreen.route: (_) => ProfileScreen(),
+      // },
     );
 
     // int _selectedIndex = 0;

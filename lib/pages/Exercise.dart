@@ -4,7 +4,9 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_2022_48/model/DataModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:capstone_2022_48/drawer/main_drawer.dart';
+// import 'package:capstone_2022_48/drawer/main_drawer.dart';
+
+import 'package:capstone_2022_48/navigator/sidemenu.dart';
 
 class StopWatch extends StatefulWidget {
   const StopWatch({Key? key}) : super(key: key);
@@ -68,6 +70,19 @@ class _StopWatchState extends State<StopWatch> {
     _exerciseData = Provider.of<ExerciseData>(context, listen: false);
 
     return Scaffold(
+      drawer: SideMenu(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Colors.black),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+      ),
       body: SafeArea(
         child: Center(
           child: Column(

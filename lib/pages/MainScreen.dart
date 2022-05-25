@@ -11,9 +11,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:capstone_2022_48/pages/ExercisePage.dart';
 
-import 'package:capstone_2022_48/pages/profile_screen.dart';
-import 'package:capstone_2022_48/drawer/main_drawer.dart';
+// import 'package:capstone_2022_48/pages/profile_screen.dart';
+// import 'package:capstone_2022_48/drawer/main_drawer.dart';
 import 'package:capstone_2022_48/pages/Signin_screen.dart';
+import 'package:capstone_2022_48/navigator/tabspage.dart';
+import 'package:capstone_2022_48/navigator/sidemenu.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -37,63 +39,65 @@ class _MainScreenState extends State<MainScreen> {
       //   '/add': (context) => Diet(db: diet_database),
       // },
       debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        // debugShowCheckedModeBanner: false,
-        // title: 'test',
-        // home: HomeCalendar(),
-        // home: StopWatch(),
-        // home: Diet(),
-        // home: Stats(),
-        // initialIndex: 1,
-        length: 4,
-        child: Scaffold(
-          // body: HomeCalendar(),
-          body: TabBarView(
-            children: [
-              HomeCalendar(),
-              StopWatch(),
-              // ExerciseScreen(),
-              Diet(),
-              Stats(),
-            ],
-          ),
-          bottomNavigationBar: Container(
-            // height: MediaQuery.of(context).size.height * 0.09,
-            child: TabBar(
-              labelStyle: TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12),
-              tabs: <Widget>[
-                Tab(
-                  height: 60,
-                  icon: Icon(Icons.favorite),
-                  text: 'home',
-                ),
-                Tab(
-                    height: 60,
-                    icon: Icon(Icons.directions_run),
-                    text: 'exercise'),
-                Tab(
-                  height: 60,
-                  icon: Icon(Icons.restaurant),
-                  text: 'diet',
-                ),
-                Tab(
-                  height: 60,
-                  icon: Icon(Icons.assessment),
-                  text: 'stats',
-                ),
-              ],
-              // indicator: BoxDecoration(
-              //   color: Color(0xff4675C0),
-              // ),
-              labelColor: Color(0xff4675C0),
-            ),
-          ),
-          drawer: MainDrawer(),
-        ),
-      ),
+
+      home: TabsPage(selectedIndex: 0),
+      // home: DefaultTabController(
+      // debugShowCheckedModeBanner: false,
+      // title: 'test',
+      // home: HomeCalendar(),
+      // home: StopWatch(),
+      // home: Diet(),
+      // home: Stats(),
+      // initialIndex: 1,
+      //   length: 4,
+      //   child: Scaffold(
+      //     // body: HomeCalendar(),
+      //     body: TabBarView(
+      //       children: [
+      //         HomeCalendar(),
+      //         StopWatch(),
+      //         // ExerciseScreen(),
+      //         Diet(),
+      //         Stats(),
+      //       ],
+      //     ),
+      //     bottomNavigationBar: Container(
+      //       // height: MediaQuery.of(context).size.height * 0.09,
+      //       child: TabBar(
+      //         labelStyle: TextStyle(
+      //             fontFamily: 'Pretendard',
+      //             fontWeight: FontWeight.bold,
+      //             fontSize: 12),
+      //         tabs: <Widget>[
+      //           Tab(
+      //             height: 60,
+      //             icon: Icon(Icons.favorite),
+      //             text: 'home',
+      //           ),
+      //           Tab(
+      //               height: 60,
+      //               icon: Icon(Icons.directions_run),
+      //               text: 'exercise'),
+      //           Tab(
+      //             height: 60,
+      //             icon: Icon(Icons.restaurant),
+      //             text: 'diet',
+      //           ),
+      //           Tab(
+      //             height: 60,
+      //             icon: Icon(Icons.assessment),
+      //             text: 'stats',
+      //           ),
+      //         ],
+      //         // indicator: BoxDecoration(
+      //         //   color: Color(0xff4675C0),
+      //         // ),
+      //         labelColor: Color(0xff4675C0),
+      //       ),
+      //     ),
+      //     drawer: MainDrawer(),
+      //   ),
+      // ),
       // routes: {
       //   SignInScreen.route: (_) => SignInScreen(),
       //   HomeCalendar.route: (_) => HomeCalendar(),

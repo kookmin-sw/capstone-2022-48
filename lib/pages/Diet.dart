@@ -14,7 +14,7 @@ import 'package:dio/dio.dart';
 import 'package:capstone_2022_48/Model/FoodRepository.dart';
 import 'package:capstone_2022_48/Model/Food.dart';
 
-import 'package:capstone_2022_48/drawer/main_drawer.dart';
+import 'package:capstone_2022_48/navigator/sidemenu.dart';
 
 class Diet extends StatefulWidget {
   // final Future<Database> db;
@@ -25,8 +25,6 @@ class Diet extends StatefulWidget {
 }
 
 class _DietState extends State<Diet> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
@@ -221,7 +219,19 @@ class _DietState extends State<Diet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+      drawer: SideMenu(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Colors.black),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -246,23 +256,6 @@ class _DietState extends State<Diet> {
               //     ],
               //   ),
               // ),
-              Container(
-                height: 300,
-                width: double.infinity,
-                color: Colors.white,
-              ),
-              Positioned(
-                top: 5,
-                left: 20,
-                child: IconButton(
-                  icon: Icon(Icons.menu),
-                  iconSize: 30,
-                  color: Colors.grey,
-                  onPressed: () {
-                    _scaffoldKey.currentState?.openDrawer();
-                  },
-                ),
-              ),
               Center(
                 child: Column(
                   children: <Widget>[
@@ -409,7 +402,7 @@ class _DietState extends State<Diet> {
           // ),
         ],
       ),
-      drawer: MainDrawer(),
+      // drawer: MainDrawer(),
     );
   }
 }

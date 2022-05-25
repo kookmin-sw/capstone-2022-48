@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'StatSteps.dart';
 import 'StatDiet.dart';
 import 'StatExercise.dart';
+import 'CompareStat.dart';
 import 'package:capstone_2022_48/drawer/main_drawer.dart';
 
 class Stats extends StatefulWidget {
@@ -23,6 +24,7 @@ class _StatsState extends State<Stats> {
           AverStepsScreen(),
           AverDietScreen(),
           AverExerScreen(),
+          CompareStatDiet(),
         ],
       ),
       // drawer: MainDrawer(),

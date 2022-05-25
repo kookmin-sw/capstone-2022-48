@@ -5,12 +5,19 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:pedometer/pedometer.dart';
 import 'dart:async';
 import 'package:capstone_2022_48/model/DataModel.dart';
-import 'dart:io';
-import 'package:capstone_2022_48/model/DataModel.dart';
 import 'package:capstone_2022_48/pages/Diet.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+class ChartData {
+  ChartData(this.x, this.y, this.color);
+  final String x;
+  final double y;
+  final Color color;
+}
 
 class HomeCalendar extends StatefulWidget {
   // const HomeCalendar({Key? key}) : super(key: key);
@@ -42,6 +49,13 @@ class _HomeCalendarState extends State<HomeCalendar> {
   late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?';
   String _steps = '?';
+
+  double _suggestedExerciseTime = 120; // 수정해야한다!!!!!!!!!
+  double _suggestedCalories = 1600; //이하동문
+  double _suggestedSugar = 50; //이하동문
+
+  get suggestedExerciseTime => _suggestedExerciseTime;
+  get suggestedCalories => _suggestedCalories;
   // String _steps = context.watch<StepData>().steps.toString();
 
   @override
@@ -127,7 +141,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    double _cal = context.watch<DietData>().calories;
+    // double _cal = context.watch<DietData>().calories;
 
     Size size = MediaQuery.of(context).size;
 
@@ -145,6 +159,9 @@ class _HomeCalendarState extends State<HomeCalendar> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        SizedBox(
+                          height: 30,
+                        ),
                         // Text(
                         //   '오늘은 ' + (_selectedDay == DateTime.now())
                         //       ? _steps
@@ -163,7 +180,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         // ),
                         getStepsFutureBuilder(),
                         SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Container(
                           width: size.width * 0.85,
@@ -251,17 +268,29 @@ class _HomeCalendarState extends State<HomeCalendar> {
                           ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             getExerciseFutureBuilder(),
                             getCalFutureBuilder(),
                           ],
                         ),
                         SizedBox(
-                          height: 110,
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            getTandanziFutureBuilder(),
+                            getSugarFutureBuilder(),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
                         ),
                       ],
                     ),
@@ -350,17 +379,48 @@ class _HomeCalendarState extends State<HomeCalendar> {
       future: getCalData(_selectedDay),
       builder: (context, snapshot) {
         final int d = snapshot.data ?? 0;
-        if (_selectedDay == DateTime.now()) {
-          // if (_selectedDay == DateTime.now().toUtc().add(Duration(hours: -9))) {
-          return Container(
-            width: MediaQuery.of(context).size.width * 0.4,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Color(0xffeeeeee),
-            ),
+        // if (_selectedDay == DateTime.now()) {
+        //   // if (_selectedDay == DateTime.now().toUtc().add(Duration(hours: -9))) {
+        //   return Container(
+        //     width: MediaQuery.of(context).size.width * 0.4,
+        //     decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(10),
+        //       color: Color(0xffeeeeee),
+        //     ),
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //       crossAxisAlignment: CrossAxisAlignment.center,
+        //       children: <Widget>[
+        //         Text(
+        //           '오늘의 섭취 칼로리',
+        //           style: TextStyle(
+        //             fontFamily: 'Pretendard',
+        //             fontWeight: FontWeight.bold,
+        //             fontSize: 20,
+        //           ),
+        //         ),
+        //         Text(
+        //           // 'data',
+        //           '${context.watch<DietData>().calories}',
+        //           // '${d.round()} 칼로리',
+        //           style: TextStyle(
+        //               fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+        //         ),
+        //       ],
+        //     ),
+        //   );
+        // } else {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          width: MediaQuery.of(context).size.width * 0.4,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xffeeeeee),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
@@ -371,47 +431,329 @@ class _HomeCalendarState extends State<HomeCalendar> {
                     fontSize: 20,
                   ),
                 ),
-                Text(
-                  // 'data',
-                  '${context.watch<DietData>().calories}',
-                  // '${d.round()} 칼로리',
-                  style: TextStyle(
-                      fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+                SizedBox(
+                  height: 10,
                 ),
-              ],
-            ),
-          );
-        } else {
-          return Container(
-            width: MediaQuery.of(context).size.width * 0.4,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Color(0xffeeeeee),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  '섭취 칼로리',
-                  style: TextStyle(
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
+                SfLinearGauge(
+                  maximum: 3000,
+                  ranges: [
+                    LinearGaugeRange(
+                      startValue: 0,
+                      endValue: suggestedCalories,
+                      color: Color(0xffFFCD00),
+                    ),
+                  ],
+                  barPointers: [
+                    LinearBarPointer(
+                      value: d.toDouble(),
+                      thickness: 5,
+                      color: Color(0xfff05650),
+                      position: LinearElementPosition.outside,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 Text(
                   // 'data',
                   // '${context.watch<ExerciseData>().time}',
                   '${d.round()} 칼로리',
                   style: TextStyle(
-                      fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16),
                 ),
               ],
             ),
+          ),
+        );
+        // }
+      },
+    );
+  }
+
+  FutureBuilder getTandanziFutureBuilder() {
+    // final Stream<QuerySnapshot> _usersStream = _collectionDiet.snapshots();
+    // DateTime date = _selectedDay;
+
+    late List<ChartData> data;
+    late TooltipBehavior _tooltip;
+
+    _tooltip = TooltipBehavior(enable: true);
+
+    return FutureBuilder(
+      future: getTandanzidata(_selectedDay),
+      builder: (context, snapshot) {
+        if (snapshot.hasData == false) {
+          double d1 = 33;
+          double d2 = 33;
+          double d3 = 34;
+
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            width: MediaQuery.of(context).size.width * 0.4,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Color(0xffeeeeee),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '탄단지 비율',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: 200,
+                    child: SfLinearGauge(
+                      minorTicksPerInterval: 4,
+                      useRangeColorForAxis: true,
+                      animateAxis: true,
+                      axisTrackStyle: LinearAxisTrackStyle(thickness: 1),
+                      ranges: <LinearGaugeRange>[
+                        LinearGaugeRange(
+                            startValue: 0,
+                            endValue: d1,
+                            position: LinearElementPosition.outside,
+                            color: Color(0xffF45656)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    '힘들어..',
+                    // '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+                    // '$docSnapshots[i]['time']',
+                    style: TextStyle(
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          // num d1 = (snapshot.data[0] == 0) ? 33 : snapshot.data[0];
+          // num d2 = (snapshot.data[1] == 0) ? 33 : snapshot.data[1];
+          // num d3 = (snapshot.data[2] == 0) ? 34 : snapshot.data[2];
+          num d1 = snapshot.data[0] ?? 33;
+          num d2 = snapshot.data[1] ?? 33;
+          num d3 = snapshot.data[2] ?? 33;
+
+          data = [
+            ChartData('탄수화물', d1.toDouble(), Color(0xff8CAAD8)),
+            ChartData('단백질', d2.toDouble(), Color(0xff6990CC)),
+            ChartData('지방', d3.toDouble(), Color(0xff4675C0)),
+          ];
+
+          // return Text('${d1} 과 ${d2} 과 ${d3}');
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            width: MediaQuery.of(context).size.width * 0.4,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Color(0xffeeeeee),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '탄단지 비율',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  // SfLinearGauge(
+                  //   minorTicksPerInterval: 4,
+                  //   useRangeColorForAxis: true,
+                  //   animateAxis: true,
+                  //   axisTrackStyle: LinearAxisTrackStyle(thickness: 1),
+                  //   ranges: <LinearGaugeRange>[
+                  //     LinearGaugeRange(
+                  //         startValue: 0,
+                  //         endValue: d1.toDouble(),
+                  //         position: LinearElementPosition.outside,
+                  //         color: Color(0xffF45656)),
+                  //     LinearGaugeRange(
+                  //         startValue: d1.toDouble(),
+                  //         endValue: d2.toDouble(),
+                  //         position: LinearElementPosition.outside,
+                  //         color: Color(0xffFFC93E)),
+                  //     LinearGaugeRange(
+                  //         startValue: d2.toDouble(),
+                  //         endValue: 100,
+                  //         position: LinearElementPosition.outside,
+                  //         color: Color(0xff0DC9AB)),
+                  //   ],
+                  // ),
+                  // SfCartesianChart(
+                  //     primaryXAxis: CategoryAxis(),
+                  //     primaryYAxis:
+                  //         NumericAxis(minimum: 0, maximum: 100, interval: 10),
+                  //     tooltipBehavior: _tooltip,
+                  //     series: <ChartSeries<_ChartData, String>>[
+                  //       ColumnSeries<_ChartData, String>(
+                  //         dataSource: data,
+                  //         xValueMapper: (_ChartData data, _) => data.x,
+                  //         yValueMapper: (_ChartData data, _) => data.y,
+                  //         name: '탄단지',
+                  //         color: Color(0xff19335A),
+                  //       ),
+                  //     ]),
+                  Container(
+                    height: 140,
+                    child: SfCircularChart(
+                        // legend: Legend(
+                        //     isVisible: true,
+                        //     position: LegendPosition.bottom,
+                        //     overflowMode: LegendItemOverflowMode.wrap),
+                        series: <CircularSeries>[
+                          // Render pie chart
+                          PieSeries<ChartData, String>(
+                            dataSource: data,
+                            pointColorMapper: (ChartData data, _) => data.color,
+                            xValueMapper: (ChartData data, _) => data.x,
+                            yValueMapper: (ChartData data, _) => data.y,
+                            radius: '110%',
+                            dataLabelSettings:
+                                DataLabelSettings(isVisible: true),
+                          ),
+                        ]),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    (d1 == 0 && d2 == 0 && d3 == 0)
+                        ? '데이터를 입력해주세요!'
+                        : '탄수화물은 ${d1}%\n단백질은 ${d2}%\n지방은 ${d3}%',
+                    // '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+                    // '$docSnapshots[i]['time']',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         }
+      },
+    );
+  }
+
+  FutureBuilder getSugarFutureBuilder() {
+    return FutureBuilder(
+      future: getSugarData(_selectedDay),
+      builder: (context, snapshot) {
+        final double d = snapshot.data ?? 0;
+
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          width: MediaQuery.of(context).size.width * 0.4,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xffeeeeee),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '섭취한 당류',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 140,
+                  child: SfRadialGauge(
+                    axes: <RadialAxis>[
+                      RadialAxis(
+                          showLabels: false,
+                          showAxisLine: false,
+                          showTicks: false,
+                          minimum: 0,
+                          maximum: 99,
+                          ranges: <GaugeRange>[
+                            GaugeRange(
+                                startValue: 0,
+                                endValue: 50,
+                                color: Color(0xFFf05650),
+                                label: '위험!',
+                                sizeUnit: GaugeSizeUnit.factor,
+                                labelStyle: GaugeTextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                startWidth: 0.65,
+                                endWidth: 0.65),
+                            GaugeRange(
+                              startValue: 50,
+                              endValue: 100,
+                              color: Color(0xFF4675C0),
+                              label: '양호',
+                              labelStyle: GaugeTextStyle(fontSize: 16),
+                              sizeUnit: GaugeSizeUnit.factor,
+                              startWidth: 0.65,
+                              endWidth: 0.65,
+                            ),
+                          ],
+                          pointers: <GaugePointer>[
+                            NeedlePointer(
+                              needleStartWidth: 1,
+                              needleEndWidth: 3,
+                              value: (d > _suggestedSugar) ? 25 : 75,
+                            ),
+                          ])
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  // '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+                  '${d}g',
+                  // '$docSnapshots[i]['time']',
+                  style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
@@ -427,31 +769,76 @@ class _HomeCalendarState extends State<HomeCalendar> {
         int todayExerciseHours = d ~/ 60;
 
         return Container(
+          padding: EdgeInsets.symmetric(vertical: 20),
           width: MediaQuery.of(context).size.width * 0.4,
-          height: 100,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Color(0xffeeeeee),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '운동 시간',
-                style: TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '운동 시간',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
-              ),
-              Text(
-                '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
-                // '$docSnapshots[i]['time']',
-                style: TextStyle(
-                    fontFamily: 'Pretendard', fontWeight: FontWeight.normal),
-              ),
-            ],
+                SizedBox(
+                  height: 10,
+                ),
+                SfLinearGauge(
+                  interval: 30,
+                  maximum: 180,
+                  barPointers: [
+                    LinearBarPointer(
+                      value: d.toDouble(),
+                      thickness: 4,
+                      color: Color(0xfff05650),
+                      position: LinearElementPosition.outside,
+                    ),
+                  ],
+                  markerPointers: [
+                    LinearWidgetPointer(
+                      value: suggestedExerciseTime,
+                      child: Container(
+                        height: 24,
+                        width: 24,
+                        decoration: new BoxDecoration(
+                          color: Color(0xffFFCD00),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            // '${_suggestedExerciseTime.round()}',
+                            '🎯',
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
+                  // '$docSnapshots[i]['time']',
+                  style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -522,6 +909,184 @@ class _HomeCalendarState extends State<HomeCalendar> {
     }
 
     return return_int;
+  }
+
+  Future<List> getTandanzidata(DateTime date) async {
+    // DateTime _now = date;
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionDiet
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    double tans = 0;
+    double dans = 0;
+    double zis = 0;
+
+    // int tan;
+    // int dan;
+    // int zi;
+    num tan;
+    num dan;
+    num zi;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      tan = docSnapshots[i]['tan'];
+      dan = docSnapshots[i]['dan'];
+      zi = docSnapshots[i]['zi'];
+      tans += tan;
+      dans += dan;
+      zis += zi;
+    }
+
+    num t;
+    num d;
+    num z;
+
+    num sum = tans + dans + zis;
+    if (sum == 0) {
+      t = 0;
+      d = 0;
+      z = 0;
+    } else {
+      // t = (tans * 100 ~/ sum) as double;
+      t = tans * 100 ~/ sum;
+      d = dans * 100 ~/ sum;
+      z = zis * 100 ~/ sum;
+    }
+
+    // var list = [t.round(), d.round(), z.round()];
+    var list = [t, d, z];
+    // var list = [tans, dans, zis];
+
+    return list;
+  }
+
+  Future<double> getTanData(DateTime date) async {
+    // DateTime _now = date;
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionDiet
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    double returnValue = 0;
+    double value;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      value = docSnapshots[i]['tan'];
+      returnValue += value;
+    }
+
+    return returnValue;
+  }
+
+  Future<double> getDanData(DateTime date) async {
+    // DateTime _now = date;
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionDiet
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    double returnValue = 0;
+    double value;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      // print(docSnapshots[i].data());
+      // int timess = docSnapshots[i]['time'];
+      // print(docSnapshots[i]['time']);
+      // print(timess);
+      // todayExerciseTimes += timess;
+      value = docSnapshots[i]['dan'];
+      // todayExerciseTimes += timess;
+      // print(todayExerciseTimes);
+      returnValue += value;
+    }
+
+    return returnValue;
+  }
+
+  Future<double> getZiData(DateTime date) async {
+    // DateTime _now = date;
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionDiet
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    double returnValue = 0;
+    double value;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      // print(docSnapshots[i].data());
+      // int timess = docSnapshots[i]['time'];
+      // print(docSnapshots[i]['time']);
+      // print(timess);
+      // todayExerciseTimes += timess;
+      value = docSnapshots[i]['zi'];
+      // todayExerciseTimes += timess;
+      // print(todayExerciseTimes);
+      returnValue += value;
+    }
+
+    return returnValue;
+  }
+
+  Future<double> getSugarData(DateTime date) async {
+    // DateTime _now = date;
+    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // print(_now);
+    DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await _collectionDiet
+        .where('date', isGreaterThanOrEqualTo: _start)
+        .where('date', isLessThanOrEqualTo: _end)
+        .orderBy('date')
+        .get();
+    var docSnapshots = querySnapshot.docs;
+
+    double returnValue = 0;
+    num value;
+
+    for (int i = 0; i < docSnapshots.length; i++) {
+      // print(docSnapshots[i].data());
+      // int timess = docSnapshots[i]['time'];
+      // print(docSnapshots[i]['time']);
+      // print(timess);
+      // todayExerciseTimes += timess;
+      value = docSnapshots[i]['sugar'];
+      // todayExerciseTimes += timess;
+      // print(todayExerciseTimes);
+      returnValue += value;
+    }
+
+    return returnValue.toDouble();
   }
 
   Future<int> getStepsData(DateTime date) async {

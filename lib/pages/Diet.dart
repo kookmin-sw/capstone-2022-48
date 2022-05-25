@@ -138,6 +138,10 @@ class _DietState extends State<Diet> {
         .add({
           'date': date,
           'cal': diet_cal,
+          'tan': diet_tan,
+          'dan': diet_dan,
+          'zi': diet_zi,
+          'sugar': diet_sugar,
         })
         .then((value) => print("add food"))
         .catchError((error) => print("Failed to add food: $error"));
@@ -154,6 +158,10 @@ class _DietState extends State<Diet> {
   late String diet_food;
   int diet_score = 0; // 1:bad 2:soso 3:good
   late int diet_cal;
+  late int diet_tan;
+  late int diet_dan;
+  late int diet_zi;
+  late int diet_sugar;
 
   int value = 0;
   var _selected = null;

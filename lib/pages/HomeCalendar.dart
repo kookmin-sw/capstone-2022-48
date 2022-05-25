@@ -12,6 +12,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'package:capstone_2022_48/navigator/sidemenu.dart';
+
 class ChartData {
   ChartData(this.x, this.y, this.color);
   final String x;
@@ -21,7 +23,7 @@ class ChartData {
 
 class HomeCalendar extends StatefulWidget {
   // const HomeCalendar({Key? key}) : super(key: key);
-  static final route = 'homecalendar';
+  // static final route = 'homecalendar';
 
   @override
   _HomeCalendarState createState() => _HomeCalendarState();
@@ -146,6 +148,19 @@ class _HomeCalendarState extends State<HomeCalendar> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      drawer: SideMenu(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Colors.black),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+      ),
       backgroundColor: Color(0xffffffff),
       body: SafeArea(
         child: Center(

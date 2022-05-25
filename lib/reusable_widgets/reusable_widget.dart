@@ -1,16 +1,5 @@
 import 'package:flutter/material.dart';
 
-/*Image logoWidget(String imageName) {
-  return Image.asset(
-    imageName,
-    fit: BoxFit.fitWidth,
-    width: 240,
-    height: 240,
-    color: Colors.white,
-  );
-}
-*/
-
 TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     TextEditingController controller) {
   return TextField(
@@ -19,7 +8,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
     cursorColor: Colors.white,
-    style: TextStyle(color: Colors.black),
+    style: TextStyle(fontFamily: 'Pretendard', color: Colors.black),
     decoration: InputDecoration(
       prefixIcon: Icon(
         icon,
@@ -27,6 +16,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
       ),
       labelText: text,
       labelStyle: TextStyle(
+        fontFamily: 'Pretendard',
         color: Colors.black,
       ),
       filled: true,
@@ -55,9 +45,12 @@ Container signInSignUpButton(
         onTap();
       },
       child: Text(
-        isLogin ? 'LOG IN' : 'SIGN UP',
+        isLogin ? 'LOGIN' : 'SIGN UP',
         style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+            fontFamily: 'Pretendard',
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
       ),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {

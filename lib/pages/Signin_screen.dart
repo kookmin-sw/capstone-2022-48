@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:capstone_2022_48/reusable_widgets/reusable_widget.dart';
 import 'package:capstone_2022_48/pages/Signup_screen.dart';
 
+import 'package:fluttertoast/fluttertoast.dart';
+
 class SignInScreen extends StatefulWidget {
   // const SignInScreen({Key? key}) : super(key: key);
-  static final route = 'signin-screen';
+  // static final route = 'signin-screen';
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -47,6 +49,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
                       .then((value) {
+                    flutterToast_true();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => MainScreen()));
                   });
@@ -64,7 +67,8 @@ class _SignInScreenState extends State<SignInScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("계정이 없으신가요?", style: TextStyle(color: Colors.black)),
+        Text("계정이 없으신가요? ",
+            style: TextStyle(fontFamily: 'Pretendard', color: Colors.black)),
         GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -72,10 +76,23 @@ class _SignInScreenState extends State<SignInScreen> {
           },
           child: Text(
             " Sign Up",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontFamily: 'Pretendard',
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
           ),
         )
       ],
     );
   }
+}
+
+void flutterToast_true() {
+  Fluttertoast.showToast(
+      msg: '로그인 됐습니다.',
+      gravity: ToastGravity.BOTTOM, // 토스트 위치
+      backgroundColor: Colors.grey,
+      fontSize: 15.0,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT);
 }

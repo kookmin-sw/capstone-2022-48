@@ -15,8 +15,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:capstone_2022_48/model/DataModel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:capstone_2022_48/pages/profile_screen.dart';
+import 'package:capstone_2022_48/navigator/profile.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -173,11 +172,11 @@ class MyApp extends StatelessWidget {
         child: MainScreen(),
       ),
       // home: SignInScreen(),
-      routes: {
-        SignInScreen.route: (_) => SignInScreen(),
-        HomeCalendar.route: (_) => HomeCalendar(),
-        ProfileScreen.route: (_) => ProfileScreen(),
-      },
+      // routes: {
+      //   SignInScreen.route: (_) => SignInScreen(),
+      //   HomeCalendar.route: (_) => HomeCalendar(),
+      //   ProfileScreen.route: (_) => ProfileScreen(),
+      // },
       // home: MainScreen(),
     );
   }

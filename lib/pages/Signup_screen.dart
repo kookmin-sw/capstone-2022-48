@@ -24,7 +24,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         elevation: 0,
         title: const Text(
           "Sign Up",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Pretendard'),
         ),
       ),
       body: Container(
@@ -62,10 +65,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       .then((value) {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => MainScreen()));
+                  }).onError((error, stackTrace) {
+                    print("Error ${error.toString()}");
                   });
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MainScreen()));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => MainScreen()));
                 })
               ],
             ),

@@ -39,7 +39,6 @@ class _StatsState extends State<Stats> {
           AverStepsScreen(),
           AverDietScreen(),
           AverExerScreen(),
-          CompareStatDiet(),
         ],
       ),
       // drawer: MainDrawer(),

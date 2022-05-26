@@ -37,7 +37,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 30.0,
+          vertical: 10.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +52,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
                   onPressed: () {},
                 ),
                 Text(
-                  '섭취 칼로리 통계',
+                  '일주일간의 섭취 칼로리',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontWeight: FontWeight.bold,
@@ -165,15 +165,16 @@ class _AverDietScreenState extends State<AverDietScreen> {
         } else {
           return BarChart(
             BarChartData(
+              maxY: 3000,
               alignment: BarChartAlignment.spaceAround,
               barGroups: [
-                generateGroupData(1, snapshot.data[6] ?? 0),
-                generateGroupData(2, snapshot.data[5] ?? 0),
-                generateGroupData(3, snapshot.data[4] ?? 0),
-                generateGroupData(4, snapshot.data[3] ?? 0),
-                generateGroupData(5, snapshot.data[2] ?? 0),
-                generateGroupData(6, snapshot.data[1] ?? 0),
-                generateGroupData(7, snapshot.data[0] ?? 0),
+                generateGroupData(1, snapshot.data[7] ?? 0),
+                generateGroupData(2, snapshot.data[6] ?? 0),
+                generateGroupData(3, snapshot.data[5] ?? 0),
+                generateGroupData(4, snapshot.data[4] ?? 0),
+                generateGroupData(5, snapshot.data[3] ?? 0),
+                generateGroupData(6, snapshot.data[2] ?? 0),
+                generateGroupData(7, snapshot.data[1] ?? 0),
               ],
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
@@ -305,70 +306,40 @@ class _AverDietScreenState extends State<AverDietScreen> {
     );
   }
 
-  Widget bottomTitleWidgets30(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontFamily: 'Pretendard',
-      color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = const Text('-5', style: style);
-        break;
-      case 1:
-        text = const Text('-4', style: style);
-        break;
-      case 2:
-        text = const Text('-3', style: style);
-        break;
-      case 3:
-        text = const Text('-2', style: style);
-        break;
-      case 4:
-        text = const Text('-1', style: style);
-        break;
-      case 5:
-        text = const Text('0', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
-
-    return Padding(child: text, padding: const EdgeInsets.only(top: 8.0));
-  }
-
   Widget bottomTitleWidgets7(double value, TitleMeta meta) {
+    DateTime date = DateTime.now()
+        .toUtc()
+        .add(Duration(hours: -9))
+        .subtract(Duration(days: 1));
+
     const style = TextStyle(
       fontFamily: 'Pretendard',
       color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      fontSize: 14,
     );
     Widget text;
     switch (value.toInt()) {
-      case 0:
-        text = const Text('-6', style: style);
-        break;
       case 1:
-        text = const Text('-5', style: style);
+        text = Text('${date.subtract(Duration(days: 6)).day}일', style: style);
         break;
       case 2:
-        text = const Text('-4', style: style);
+        text = Text('${date.subtract(Duration(days: 5)).day}일', style: style);
         break;
       case 3:
-        text = const Text('-3', style: style);
+        text = Text('${date.subtract(Duration(days: 4)).day}일', style: style);
         break;
       case 4:
-        text = const Text('-2', style: style);
+        text = Text('${date.subtract(Duration(days: 3)).day}일', style: style);
         break;
       case 5:
-        text = const Text('-1', style: style);
+        text = Text('${date.subtract(Duration(days: 2)).day}일', style: style);
         break;
       case 6:
-        text = const Text('0', style: style);
+        text = Text('${date.subtract(Duration(days: 1)).day}일', style: style);
+        break;
+      case 7:
+        text = Text('${date.day}일', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -382,225 +353,39 @@ class _AverDietScreenState extends State<AverDietScreen> {
     const style = TextStyle(
       fontFamily: 'Pretendard',
       color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.normal,
       fontSize: 14,
     );
     String text;
     switch (value.toInt()) {
-      case 1:
+      case 500:
         text = '500';
         break;
-      case 2:
+      case 1000:
         text = '1000';
         break;
-      case 3:
+      case 1500:
         text = '1500';
         break;
-      case 4:
+      case 2000:
         text = '2000';
         break;
-      case 5:
+      case 2500:
         text = '2500';
         break;
-      case 6:
+      case 3000:
         text = '3000';
+        break;
+      case 3500:
+        text = '3500';
+        break;
+      case 4000:
+        text = '4000';
         break;
       default:
         return Container();
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
-  LineChartData mainData() {
-    // 최근 30일
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets30,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 50,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff19335A), width: 1)),
-      minX: 0,
-      maxX: 4,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(1, 2),
-            FlSpot(2, 5),
-            FlSpot(3, 3.1),
-            FlSpot(4, 3),
-          ],
-          isCurved: false,
-          // gradient: LinearGradient(
-          //   colors: gradientColors,
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          // ),
-
-          color: Color(0xff19335A),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: false,
-          ),
-        ),
-      ],
-    );
-  }
-
-  LineChartData avgData() {
-    // 최근 7일
-    return LineChartData(
-      // lineTouchData: LineTouchData(enabled: false),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
-        verticalInterval: 1,
-        horizontalInterval: 1,
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            // color: const Color(0xff19335A),
-            color: Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            // color: const Color(0xff19335A),
-            color: Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets7,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
-          ),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff000000), width: 1)),
-      minX: 0,
-      maxX: 6,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(1, 1),
-            FlSpot(2, 5),
-            FlSpot(3, 4.7),
-            FlSpot(4, 3),
-            FlSpot(5, 2.5),
-            FlSpot(6, 4),
-          ],
-          isCurved: false,
-          // gradient: LinearGradient(
-          //   colors: [
-          //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
-          //         .lerp(0.2)!,
-          //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
-          //         .lerp(0.2)!,
-          //   ],
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          // ),
-          color: Color(0xff19335A),
-          barWidth: 4,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: false,
-          ),
-        ),
-      ],
-    );
-  }
-
-  void toggleSelect(value) {
-    if (value == 0) {
-      isWeek = true;
-      isMonth = false;
-      showAvg = false;
-      // print(showAvg);
-    } else {
-      isWeek = false;
-      isMonth = true;
-      showAvg = true;
-      // print(showAvg);
-    }
-    setState(() {
-      isSelected = [isWeek, isMonth];
-    });
   }
 }

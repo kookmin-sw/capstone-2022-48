@@ -12,7 +12,7 @@ class AverExerScreen extends StatefulWidget {
 
 class _AverExerScreenState extends State<AverExerScreen> {
   CollectionReference _collectionExc =
-      FirebaseFirestore.instance.collection('DietExerciseCollection');
+      FirebaseFirestore.instance.collection('ExerciseDataCollection');
   int showingTooltip = -1;
 
   bool isWeek = true;
@@ -40,7 +40,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 30.0,
+          vertical: 10.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,7 +55,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
                   onPressed: () {},
                 ),
                 Text(
-                  '운동시간 통계',
+                  '일주일간의 운동시간',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: leftTitleWidgets,
-                    interval: 500,
+                    interval: 30,
                     reservedSize: 50,
                   ),
                 ),
@@ -255,34 +255,42 @@ class _AverExerScreenState extends State<AverExerScreen> {
   }
 
   Widget bottomTitleWidgets7(double value, TitleMeta meta) {
+    DateTime date = DateTime.now()
+        .toUtc()
+        .add(Duration(hours: -9))
+        .subtract(Duration(days: 1));
+
     const style = TextStyle(
       fontFamily: 'Pretendard',
       color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      fontSize: 14,
     );
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = const Text('-6', style: style);
+        text = Text('${date.subtract(Duration(days: 7)).day}일', style: style);
         break;
       case 1:
-        text = const Text('-5', style: style);
+        text = Text('${date.subtract(Duration(days: 6)).day}일', style: style);
         break;
       case 2:
-        text = const Text('-4', style: style);
+        text = Text('${date.subtract(Duration(days: 5)).day}일', style: style);
         break;
       case 3:
-        text = const Text('-3', style: style);
+        text = Text('${date.subtract(Duration(days: 4)).day}일', style: style);
         break;
       case 4:
-        text = const Text('-2', style: style);
+        text = Text('${date.subtract(Duration(days: 3)).day}일', style: style);
         break;
       case 5:
-        text = const Text('-1', style: style);
+        text = Text('${date.subtract(Duration(days: 2)).day}일', style: style);
         break;
       case 6:
-        text = const Text('0', style: style);
+        text = Text('${date.subtract(Duration(days: 1)).day}일', style: style);
+        break;
+      case 7:
+        text = Text('${date.day}일', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -296,25 +304,34 @@ class _AverExerScreenState extends State<AverExerScreen> {
     const style = TextStyle(
       fontFamily: 'Pretendard',
       color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.normal,
       fontSize: 14,
     );
     String text;
     switch (value.toInt()) {
-      case 1:
+      case 30:
+        text = '30분';
+        break;
+      case 60:
         text = '1시간';
         break;
-      case 2:
+      case 90:
+        text = '1시간 30분';
+        break;
+      case 120:
         text = '2시간';
         break;
-      case 3:
+      case 150:
+        text = '2시간 30분';
+        break;
+      case 180:
         text = '3시간';
         break;
-      case 4:
-        text = '4시간';
+      case 210:
+        text = '3시간 30분';
         break;
-      case 5:
-        text = '5시간';
+      case 240:
+        text = '4시간';
         break;
       default:
         return Container();
@@ -325,8 +342,6 @@ class _AverExerScreenState extends State<AverExerScreen> {
 
   FutureBuilder showMessage7() {
     num avgExersForWeek = 0;
-    var avgExersForWeekMinutes;
-    var avgExersForWeekHours;
     return FutureBuilder(
         future: getSevenDaysData(),
         builder: (context, snapshot) {
@@ -355,8 +370,8 @@ class _AverExerScreenState extends State<AverExerScreen> {
               avgExersForWeek += snapshot.data[i];
             }
 
-            avgExersForWeekMinutes = avgExersForWeek % 60;
-            avgExersForWeekHours = avgExersForWeek ~/ 60;
+            num avgExersForWeekMinutes = avgExersForWeek ~/ 7 % 60;
+            num avgExersForWeekHours = avgExersForWeek ~/ 7 ~/ 60;
             return Flexible(
               flex: 1,
               child: Container(

@@ -33,7 +33,7 @@ class _DietState extends State<Diet> {
   }
 
   // Future<double> test(String food) async {
-  test(String food) async {
+  Future<List<num>> test(String food) async {
     // String food = '고등어구이';
     final response = await Dio().get(
         'http://openapi.foodsafetykorea.go.kr/api/de8e03e4d4884e019688/I2790/json/1/10/' +
@@ -65,25 +65,31 @@ class _DietState extends State<Diet> {
       }
     }
 
-    print(foodData[n].DESC_KOR);
-    print(foodData[n].NUTR_CONT1);
+    List<num> list = List<num>.filled(10, 0.0);
+
+    // print(foodData[n].DESC_KOR);
+    // print(foodData[n].NUTR_CONT1);
     // if (foodData[n].NUTR_CONT1 != null) {
     //   return foodData[n].NUTR_CONT1;
     // } else {
     //   return 0;
     // }
-    return foodData[n].NUTR_CONT1;
-    // print(foodData[n].NUTR_CONT2);
-    // print(foodData[n].NUTR_CONT3);
-    // print(foodData[n].NUTR_CONT4);
-    // print(foodData[n].NUTR_CONT5);
+    // return foodData[n].NUTR_CONT1;
+
+    list[0] = foodData[n].NUTR_CONT1; // kcal
+    list[1] = foodData[n].NUTR_CONT2; // tan
+    list[2] = foodData[n].NUTR_CONT3; // dan
+    list[3] = foodData[n].NUTR_CONT4; // zi
+    list[4] = foodData[n].NUTR_CONT5; // sugar
+
+    print(foodData[n].NUTR_CONT2);
+    print(foodData[n].NUTR_CONT3);
+    print(foodData[n].NUTR_CONT4);
+    print(foodData[n].NUTR_CONT5);
+
+    return list;
 
     // print(foodData[1].DESC_KOR);
-    // print(foodData[1].NUTR_CONT1);
-    // print(foodData[1].NUTR_CONT2);
-    // print(foodData[1].NUTR_CONT3);
-    // print(foodData[1].NUTR_CONT4);
-    // print(foodData[1].NUTR_CONT5);
   }
 
   // fetchData() async {
@@ -130,16 +136,23 @@ class _DietState extends State<Diet> {
   CollectionReference dietdatas =
       FirebaseFirestore.instance.collection('DietDataCollection');
 
-  Future<void> addFoodData() {
+  Future<void> addFoodData(List<num> list) {
     // Call the user's CollectionReference to add a new user
     return dietdatas
         .add({
-          'date': date,
-          'cal': diet_cal,
-          'tan': diet_tan,
-          'dan': diet_dan,
-          'zi': diet_zi,
-          'sugar': diet_sugar,
+          // 'date': DateTime.now().toUtc().add(Duration(hours: -9)),
+          'date': DateTime.now(),
+          'cal': list[0],
+          'tan': list[1],
+          'dan': list[2],
+          'zi': list[3],
+          'sugar': list[4],
+          // 'date': date,
+          // 'cal': diet_cal,
+          // 'tan': diet_tan,
+          // 'dan': diet_dan,
+          // 'zi': diet_zi,
+          // 'sugar': diet_sugar,
         })
         .then((value) => print("add food"))
         .catchError((error) => print("Failed to add food: $error"));
@@ -155,11 +168,11 @@ class _DietState extends State<Diet> {
   int diet_type = 0; // 1:아침 2:점심 3:저녁 4:간식
   late String diet_food;
   int diet_score = 0; // 1:bad 2:soso 3:good
-  late int diet_cal;
-  late int diet_tan;
-  late int diet_dan;
-  late int diet_zi;
-  late int diet_sugar;
+  num diet_cal = 0;
+  num diet_tan = 0;
+  num diet_dan = 0;
+  num diet_zi = 0;
+  num diet_sugar = 0;
 
   int value = 0;
   var _selected = null;
@@ -262,7 +275,7 @@ class _DietState extends State<Diet> {
                     Container(
                       child: TextField(
                         style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Pretendard'),
                         textAlign: TextAlign.center,
@@ -288,25 +301,25 @@ class _DietState extends State<Diet> {
                       padding: EdgeInsets.only(top: 30, bottom: 20),
                       width: 200,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _icon(
-                          3,
-                          Icons.sentiment_very_satisfied,
-                        ),
-                        SizedBox(width: 5),
-                        _icon(
-                          2,
-                          Icons.sentiment_satisfied,
-                        ),
-                        SizedBox(width: 5),
-                        _icon(
-                          1,
-                          Icons.sentiment_very_dissatisfied,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     _icon(
+                    //       3,
+                    //       Icons.sentiment_very_satisfied,
+                    //     ),
+                    //     SizedBox(width: 5),
+                    //     _icon(
+                    //       2,
+                    //       Icons.sentiment_satisfied,
+                    //     ),
+                    //     SizedBox(width: 5),
+                    //     _icon(
+                    //       1,
+                    //       Icons.sentiment_very_dissatisfied,
+                    //     ),
+                    //   ],
+                    // ),
                     SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -330,7 +343,7 @@ class _DietState extends State<Diet> {
                               fieldText.clear();
                             });
                           },
-                          label: Text('삭제'),
+                          label: Text('리셋'),
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(100, 45),
                             primary: Color(0xffbbbbbb),
@@ -370,13 +383,19 @@ class _DietState extends State<Diet> {
                             //     .addCalories(test(diet_food));
                             // double dou = await test(diet_food!);
                             // context.read<DietData>().addCalories(dou);
-                            double dou;
-                            // if (await test(diet_food) != null) {
-                            dou = await test(diet_food);
-                            // }
-                            context.read<DietData>().addCalories(dou);
-                            diet_cal = dou.round();
-                            addFoodData();
+                            late List<num> list;
+                            if (await test(diet_food) != null) {
+                              // dou = await test(diet_food);
+                              list = await test(diet_food);
+                            }
+                            // context.read<DietData>().addCalories(list[0]);
+                            // context.read<DietData>().addTan(list[1]);
+                            // context.read<DietData>().addDan(list[2]);
+                            // context.read<DietData>().addZi(list[3]);
+                            // context.read<DietData>().addSugar(list[4]);
+                            // diet_cal = dou.round();
+                            // addFoodData();
+                            addFoodData(list);
                           },
                           label: Text('추가'),
                           style: ElevatedButton.styleFrom(

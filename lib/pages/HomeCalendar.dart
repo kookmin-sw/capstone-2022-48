@@ -177,15 +177,15 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         SizedBox(
                           height: 30,
                         ),
-                        // Text(
-                        //   '오늘은 ' + (_selectedDay == DateTime.now())
-                        //       ? _steps
-                        //       : getStepsData(_selectedDay).toString() + ' 걸음',
-                        //   style: TextStyle(
-                        //       fontSize: 30,
-                        //       fontFamily: 'Pretendard',
-                        //       fontWeight: FontWeight.bold),
-                        // ),
+                        (_selectedDay == DateTime.now())
+                            ? Text(
+                                '오늘은 ' + _steps + ' 걸음',
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    fontFamily: 'Pretendard',
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : getStepsFutureBuilder(),
                         // Text(
                         //   '오늘은 ' + _steps + ' 걸음',
                         //   style: TextStyle(
@@ -193,7 +193,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         //       fontFamily: 'Pretendard',
                         //       fontWeight: FontWeight.bold),
                         // ),
-                        getStepsFutureBuilder(),
+                        // getStepsFutureBuilder(),
                         SizedBox(
                           height: 15,
                         ),
@@ -393,7 +393,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
     return FutureBuilder(
       future: getCalData(_selectedDay),
       builder: (context, snapshot) {
-        final int d = snapshot.data ?? 0;
+        num d = snapshot.data ?? 0;
         // if (_selectedDay == DateTime.now()) {
         //   // if (_selectedDay == DateTime.now().toUtc().add(Duration(hours: -9))) {
         //   return Container(
@@ -863,7 +863,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
   Future<int> getExerciseData(DateTime date) async {
     // DateTime _now = date;
     // DateTime _now = date.toUtc();
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
 
     DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
@@ -894,9 +894,9 @@ class _HomeCalendarState extends State<HomeCalendar> {
     return return_int;
   }
 
-  Future<int> getCalData(DateTime date) async {
+  Future<num> getCalData(DateTime date) async {
     // DateTime _now = date;
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
     DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
     DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
@@ -908,8 +908,8 @@ class _HomeCalendarState extends State<HomeCalendar> {
         .get();
     var docSnapshots = querySnapshot.docs;
 
-    int return_int = 0;
-    int cals;
+    num return_int = 0;
+    num cals;
 
     for (int i = 0; i < docSnapshots.length; i++) {
       // print(docSnapshots[i].data());
@@ -928,7 +928,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   Future<List> getTandanzidata(DateTime date) async {
     // DateTime _now = date;
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
     DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
     DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
@@ -985,7 +985,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   Future<double> getTanData(DateTime date) async {
     // DateTime _now = date;
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
     DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
     DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
@@ -1010,7 +1010,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   Future<double> getDanData(DateTime date) async {
     // DateTime _now = date;
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
     DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
     DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
@@ -1042,7 +1042,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   Future<double> getZiData(DateTime date) async {
     // DateTime _now = date;
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
     DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
     DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
@@ -1074,7 +1074,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   Future<double> getSugarData(DateTime date) async {
     // DateTime _now = date;
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
     DateTime _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
     DateTime _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
@@ -1104,10 +1104,10 @@ class _HomeCalendarState extends State<HomeCalendar> {
     return returnValue.toDouble();
   }
 
-  Future<int> getStepsData(DateTime date) async {
+  Future<num> getStepsData(DateTime date) async {
     // DateTime _now = date;
 
-    DateTime _now = date.toUtc().add(Duration(hours: -9));
+    DateTime _now = date;
     // print(_now);
     // print(DateTime.now());
 
@@ -1121,8 +1121,8 @@ class _HomeCalendarState extends State<HomeCalendar> {
         .get();
     var docSnapshots = querySnapshot.docs;
 
-    int return_int = 0;
-    int stepss;
+    num return_int = 0;
+    num stepss;
 
     for (int i = 0; i < docSnapshots.length; i++) {
       // print(docSnapshots[i].data());

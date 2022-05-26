@@ -14,6 +14,10 @@ class AverDietScreen extends StatefulWidget {
 }
 
 class _AverDietScreenState extends State<AverDietScreen> {
+  CollectionReference _collectionKcals =
+      FirebaseFirestore.instance.collection('DietDataCollection');
+  int showingTooltip = -1;
+
   bool isWeek = true;
   bool isMonth = false;
   late List<bool> isSelected;
@@ -66,235 +70,9 @@ class _AverDietScreenState extends State<AverDietScreen> {
             SizedBox(
               height: 15.0,
             ),
-            ToggleButtons(
-              fillColor: Color(0xff8CAAD8),
-              selectedColor: Color(0xffffffff),
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    '최근 7일',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    '최근 30일',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-              ],
-              // isSelected: isSelected,
-              // onPressed: toggleSelect,
-              isSelected: isSelected,
-              onPressed: toggleSelect,
-              // renderBorder: false,
-            ),
             SizedBox(
               height: 10.0,
             ),
-            // Row(
-            //   mainAxisSize: MainAxisSize.max,
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: <Widget>[
-            //     Indicator(
-            //       color: Color(0xff19335A),
-            //       text: '탄수화물',
-            //       isSquare: false,
-            //       size: touchedIndex == 0 ? 16 : 12,
-            //       textColor: touchedIndex == 0 ? Colors.black : Colors.grey,
-            //     ),
-            //     Indicator(
-            //       color: Color(0xff19335A),
-            //       text: '단백질',
-            //       isSquare: false,
-            //       size: touchedIndex == 1 ? 16 : 12,
-            //       textColor: touchedIndex == 1 ? Colors.black : Colors.grey,
-            //     ),
-            //     Indicator(
-            //       color: Color(0xff697A98),
-            //       text: '지방',
-            //       isSquare: false,
-            //       size: touchedIndex == 2 ? 16 : 12,
-            //       textColor: touchedIndex == 2 ? Colors.black : Colors.grey,
-            //     ),
-            //     // Indicator(
-            //     //   color: Color(0xff13d38e),
-            //     //   text: 'Four',
-            //     //   isSquare: false,
-            //     //   size: touchedIndex == 3 ? 16 : 12,
-            //     //   textColor: touchedIndex == 3 ? Colors.black : Colors.grey,
-            //     // ),
-            //   ],
-            // ),
-            // SizedBox(
-            //   height: 20.0,
-            // ),
-            // // PieChart(
-            // //   PieChartData(
-            // //     // centerSpaceRadius: 5,
-            // //     // borderData: FlBorderData(show: false),
-            // //     // sections: [
-            // //     //   PieChartSectionData(
-            // //     //       value: 1, color: Colors.purple, radius: 10),
-            // //     //   PieChartSectionData(
-            // //     //       value: 2, color: Colors.amber, radius: 11),
-            // //     //   PieChartSectionData(
-            // //     //       value: 3, color: Colors.green, radius: 12),
-            // //     // ],
-            // //     sections: piedata,
-            // //   ),
-            // // ),
-            // // Expanded(
-            // //   child: AspectRatio(
-            // //     aspectRatio: 1,
-            // //     child: PieChart(
-            // //       PieChartData(
-            // //           pieTouchData: PieTouchData(touchCallback:
-            // //               (FlTouchEvent event, pieTouchResponse) {
-            // //             setState(() {
-            // //               if (!event.isInterestedForInteractions ||
-            // //                   pieTouchResponse == null ||
-            // //                   pieTouchResponse.touchedSection == null) {
-            // //                 touchedIndex = -1;
-            // //                 return;
-            // //               }
-            // //               touchedIndex = pieTouchResponse
-            // //                   .touchedSection!.touchedSectionIndex;
-            // //             });
-            // //           }),
-            // //           startDegreeOffset: 180,
-            // //           borderData: FlBorderData(
-            // //             show: false,
-            // //           ),
-            // //           sectionsSpace: 1,
-            // //           centerSpaceRadius: 0,
-            // //           sections: showingSections()),
-            // //     ),
-            // //   ),
-            // // ),
-            // Expanded(
-            //   // height: MediaQuery.of(context).size.height * 0.4,
-            //   // width: MediaQuery.of(context).size.width * 0.4,
-            //   child: PieChart(
-            //     PieChartData(
-            //         pieTouchData: PieTouchData(
-            //             touchCallback: (FlTouchEvent event, pieTouchResponse) {
-            //           setState(() {
-            //             if (!event.isInterestedForInteractions ||
-            //                 pieTouchResponse == null ||
-            //                 pieTouchResponse.touchedSection == null) {
-            //               touchedIndex = -1;
-            //               return;
-            //             }
-            //             touchedIndex = pieTouchResponse
-            //                 .touchedSection!.touchedSectionIndex;
-            //           });
-            //         }),
-            //         borderData: FlBorderData(
-            //           show: false,
-            //         ),
-            //         sectionsSpace: 0,
-            //         centerSpaceRadius: 50,
-            //         sections: showingSections()),
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: 15.0,
-            // ),
-            // Row(
-            //   children: [
-            //     // SfRadialGauge(axes: <RadialAxis>[
-            //     //   RadialAxis(minimum: 0, maximum: 100, ranges: <GaugeRange>[
-            //     //     GaugeRange(
-            //     //         startValue: 0, endValue: 30, color: Colors.green),
-            //     //     GaugeRange(
-            //     //         startValue: 30, endValue: 60, color: Colors.orange),
-            //     //     GaugeRange(startValue: 60, endValue: 100, color: Colors.red)
-            //     //   ], pointers: <GaugePointer>[
-            //     //     NeedlePointer(value: 90)
-            //     //   ], annotations: <GaugeAnnotation>[
-            //     //     GaugeAnnotation(
-            //     //         widget: Container(
-            //     //             child: Text('90.0',
-            //     //                 style: TextStyle(
-            //     //                     fontSize: 12,
-            //     //                     fontWeight: FontWeight.bold))),
-            //     //         angle: 90,
-            //     //         positionFactor: 0.5)
-            //     //   ])
-            //     // ]),
-            //     Container(
-            //       height: MediaQuery.of(context).size.height * 0.2,
-            //       width: MediaQuery.of(context).size.width * 0.4,
-            //       child: SfRadialGauge(
-            //         axes: <RadialAxis>[
-            //           RadialAxis(
-            //               showLabels: false,
-            //               showAxisLine: false,
-            //               showTicks: false,
-            //               minimum: 0,
-            //               maximum: 99,
-            //               ranges: <GaugeRange>[
-            //                 GaugeRange(
-            //                     startValue: 0,
-            //                     endValue: 33,
-            //                     color: Color(0xFFFE2A25),
-            //                     label: '경고!',
-            //                     sizeUnit: GaugeSizeUnit.factor,
-            //                     labelStyle: GaugeTextStyle(
-            //                         fontFamily: 'Pretendard', fontSize: 12),
-            //                     startWidth: 0.65,
-            //                     endWidth: 0.65),
-            //                 GaugeRange(
-            //                   startValue: 33,
-            //                   endValue: 66,
-            //                   color: Color(0xFFFFBA00),
-            //                   label: '조금만 더 힘내세요',
-            //                   labelStyle: GaugeTextStyle(
-            //                       fontFamily: 'Pretendard', fontSize: 12),
-            //                   startWidth: 0.65,
-            //                   endWidth: 0.65,
-            //                   sizeUnit: GaugeSizeUnit.factor,
-            //                 ),
-            //                 GaugeRange(
-            //                   startValue: 66,
-            //                   endValue: 99,
-            //                   color: Color(0xFF00AB47),
-            //                   label: '좋아요!',
-            //                   labelStyle: GaugeTextStyle(
-            //                       fontFamily: 'Pretendard', fontSize: 12),
-            //                   sizeUnit: GaugeSizeUnit.factor,
-            //                   startWidth: 0.65,
-            //                   endWidth: 0.65,
-            //                 ),
-            //               ],
-            //               pointers: <GaugePointer>[
-            //                 NeedlePointer(value: 60)
-            //               ])
-            //         ],
-            //       ),
-            //     ),
-            //     Container(
-            //       height: MediaQuery.of(context).size.height * 0.2,
-            //       width: MediaQuery.of(context).size.width * 0.4,
-            //       margin: EdgeInsets.all(10),
-            //       padding: EdgeInsets.all(20),
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(20),
-            //         color: Color(0xffdddddd),
-            //       ),
-            //       child: Text(
-            //         '평균 권장 섭취율보다 n% 많이 섭취했어요! 탄수화물을 과다 섭취하면 비만, 고혈압의 위험이 있어요😥',
-            //         style: TextStyle(
-            //           fontFamily: 'Pretendard',
-            //           fontSize: 16,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             Flexible(
               flex: 2,
               child: Container(
@@ -306,10 +84,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 24, bottom: 12),
-                  child: LineChart(
-                    // showAvg ? avgData() : mainData(),
-                    showAvg ? mainData() : avgData(),
-                  ),
+                  child: weekData(),
                 ),
               ),
             ),
@@ -317,50 +92,216 @@ class _AverDietScreenState extends State<AverDietScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Container(
-                //   height: MediaQuery.of(context).size.height * 0.2,
-                //   width: MediaQuery.of(context).size.width * 0.4,
-                //   child: SfLinearGauge(
-                //     axisLabelStyle: TextStyle(
-                //         color: Colors.black,
-                //         fontSize: 10,
-                //         fontStyle: FontStyle.italic,
-                //         fontFamily: 'Pretendard'),
-                //     interval: 20,
-                //     markerPointers: [
-                //       LinearShapePointer(
-                //         // value: 50,
-                //         value: shapePointerValue,
-                //         onChanged: (value) {
-                //           setState(() {
-                //             shapePointerValue = value;
-                //           });
-                //         },
-                //       ),
-                //     ],
-                //     // ranges: [
-                //     //   LinearGaugeRange(
-                //     //     startValue: 0,
-                //     //     endValue: 100,
-                //     //   ),
-                //     // ],
-                //     barPointers: [LinearBarPointer(value: 80)],
-                //   ),
-                // ),
-                // showAvg ? showMessage7() : showMessage30(),
                 Text(
                   '💡',
                   style: TextStyle(
                     fontSize: 24,
                   ),
                 ),
-                showAvg ? showMessage30() : showMessage7()
+                showMessage7()
                 // showAvg ? showMessage30() : showMessage7(),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Future<List> getSevenDaysData() async {
+    // DateTime _now = date;
+    // DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // DateTime _now = DateTime.now().subtract(Duration(days: 1));
+    DateTime _now = DateTime.now();
+    // print(_now);
+    DateTime _start;
+    DateTime _end;
+
+    List<num> list = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    // _now = DateTime.now()
+    //     .toUtc()
+    //     .subtract(Duration(days: i))
+    //     .add(Duration(hours: -9));
+    // _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    // _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    // QuerySnapshot querySnapshot = await _collectionSteps
+    //     .where('date', isGreaterThanOrEqualTo: _start)
+    //     .where('date', isLessThanOrEqualTo: _end)
+    //     .orderBy('date')
+    //     .get();
+    // var docSnapshots = querySnapshot.docs;
+
+    for (int i = 1; i < 9; i++) {
+      num cals = 0;
+      _now = DateTime.now().toUtc().subtract(Duration(days: i));
+      _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+      _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+      QuerySnapshot querySnapshot = await _collectionKcals
+          .where('date', isGreaterThanOrEqualTo: _start)
+          .where('date', isLessThanOrEqualTo: _end)
+          .orderBy('date')
+          .get();
+      var docSnapshots = querySnapshot.docs;
+      if (docSnapshots != null && docSnapshots.length != 0) {
+        for (int j = 0; j < docSnapshots.length; j++) {
+          cals += docSnapshots[j]['cal'];
+        }
+        list[i - 1] = cals;
+      }
+    }
+
+    return list;
+  }
+
+  FutureBuilder weekData() {
+    return FutureBuilder(
+      future: getSevenDaysData(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.hasError) {
+          return Container();
+        } else {
+          return BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              barGroups: [
+                generateGroupData(1, snapshot.data[6] ?? 0),
+                generateGroupData(2, snapshot.data[5] ?? 0),
+                generateGroupData(3, snapshot.data[4] ?? 0),
+                generateGroupData(4, snapshot.data[3] ?? 0),
+                generateGroupData(5, snapshot.data[2] ?? 0),
+                generateGroupData(6, snapshot.data[1] ?? 0),
+                generateGroupData(7, snapshot.data[0] ?? 0),
+              ],
+              barTouchData: BarTouchData(
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Color(0xffFFCD00),
+                  tooltipRoundedRadius: 33,
+                ),
+                enabled: true,
+                handleBuiltInTouches: false,
+                touchCallback: (event, response) {
+                  if (response != null &&
+                      response.spot != null &&
+                      event is FlTapUpEvent) {
+                    setState(() {
+                      final x = response.spot!.touchedBarGroup.x;
+                      final isShowing = showingTooltip == x;
+                      if (isShowing) {
+                        showingTooltip = -1;
+                      } else {
+                        showingTooltip = x;
+                      }
+                    });
+                  }
+                },
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: bottomTitleWidgets7,
+                    reservedSize: 38,
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: leftTitleWidgets,
+                    interval: 500,
+                    reservedSize: 50,
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(
+                  color: Color(0xffdddddd),
+                ),
+              ),
+              gridData: FlGridData(show: false),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  FutureBuilder showMessage7() {
+    num avgKcalsForWeek = 0;
+    return FutureBuilder(
+        future: getSevenDaysData(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.hasError) {
+            return Flexible(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xffdddddd),
+                ),
+                child: Text(
+                  // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+                  '기다려주세요!',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            );
+          } else {
+            for (int i = 0; i < 7; i++) {
+              avgKcalsForWeek += snapshot.data[i];
+            }
+            return Flexible(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xffdddddd),
+                ),
+                child: Text(
+                  // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+                  '최근 7일간 평균적으로 ${avgKcalsForWeek ~/ 7} Kcal만큼 섭취하셨습니다!',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
+  }
+
+  BarChartGroupData generateGroupData(int x, int y) {
+    return BarChartGroupData(
+      x: x,
+      showingTooltipIndicators: showingTooltip == x ? [0] : [],
+      barRods: [
+        BarChartRodData(
+          toY: y.toDouble(),
+          color: Color(0xff4675C0),
+        ),
+      ],
     );
   }
 
@@ -662,178 +603,4 @@ class _AverDietScreenState extends State<AverDietScreen> {
       isSelected = [isWeek, isMonth];
     });
   }
-
-  Widget showMessage7() {
-    var avgCalsForWeek = 1600;
-    return Flexible(
-      flex: 1,
-      child: Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xffdddddd),
-        ),
-        child: Text(
-          // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-          // '최근 7일간 ${avgCalsForWeek}만큼 걸으셨습니다!',
-          '최근 7일간 평균적으로 ${avgCalsForWeek}kcal을 섭취하셨습니다!',
-
-          style: TextStyle(
-            fontFamily: 'Pretendard',
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget showMessage30() {
-    var avgCalsForMonth = 1400;
-    return Flexible(
-      flex: 1,
-      child: Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xffdddddd),
-        ),
-        child: Text(
-          // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-          // '30일 메세지',
-          '최근 30일간 평균적으로 ${avgCalsForMonth}kcal을 섭취하셨습니다!',
-          style: TextStyle(
-            fontFamily: 'Pretendard',
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-  }
-//   List<PieChartSectionData> showingSections() {
-//     return List.generate(
-//       4,
-//       (i) {
-//         final isTouched = i == touchedIndex;
-//         final opacity = isTouched ? 1.0 : 0.6;
-
-//         const color0 = Color(0xff0293ee);
-//         const color1 = Color(0xfff8b250);
-//         const color2 = Color(0xff845bef);
-//         const color3 = Color(0xff13d38e);
-
-//         switch (i) {
-//           case 0:
-//             return PieChartSectionData(
-//               color: color0.withOpacity(opacity),
-//               value: 25,
-//               title: '',
-//               radius: 80,
-//               titleStyle: const TextStyle(
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color(0xff044d7c)),
-//               titlePositionPercentageOffset: 0.55,
-//               borderSide: isTouched
-//                   ? BorderSide(color: color0.darken(40), width: 6)
-//                   : BorderSide(color: color0.withOpacity(0)),
-//             );
-//           case 1:
-//             return PieChartSectionData(
-//               color: color1.withOpacity(opacity),
-//               value: 25,
-//               title: '',
-//               radius: 65,
-//               titleStyle: const TextStyle(
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color(0xff90672d)),
-//               titlePositionPercentageOffset: 0.55,
-//               borderSide: isTouched
-//                   ? BorderSide(color: color1.darken(40), width: 6)
-//                   : BorderSide(color: color2.withOpacity(0)),
-//             );
-//           case 2:
-//             return PieChartSectionData(
-//               color: color2.withOpacity(opacity),
-//               value: 25,
-//               title: '',
-//               radius: 60,
-//               titleStyle: const TextStyle(
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color(0xff4c3788)),
-//               titlePositionPercentageOffset: 0.6,
-//               borderSide: isTouched
-//                   ? BorderSide(color: color2.darken(40), width: 6)
-//                   : BorderSide(color: color2.withOpacity(0)),
-//             );
-//           case 3:
-//             return PieChartSectionData(
-//               color: color3.withOpacity(opacity),
-//               value: 25,
-//               title: '',
-//               radius: 70,
-//               titleStyle: const TextStyle(
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color(0xff0c7f55)),
-//               titlePositionPercentageOffset: 0.55,
-//               borderSide: isTouched
-//                   ? BorderSide(color: color3.darken(40), width: 6)
-//                   : BorderSide(color: color2.withOpacity(0)),
-//             );
-//           default:
-//             throw Error();
-//         }
-//       },
-//     );
-//   }
-// }
-
-  // List<PieChartSectionData> showingSections() {
-  //   return List.generate(3, (i) {
-  //     final isTouched = i == touchedIndex;
-  //     final fontSize = isTouched ? 25.0 : 16.0;
-  //     final radius = isTouched ? 110.0 : 100.0;
-  //     switch (i) {
-  //       case 0:
-  //         return PieChartSectionData(
-  //           color: Color(0xff19335A),
-  //           value: 40,
-  //           title: '40%',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: Color(0xffffffff)),
-  //         );
-  //       case 1:
-  //         return PieChartSectionData(
-  //           color: Color(0xff697A98),
-  //           value: 30,
-  //           title: '30%',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: Color(0xffffffff)),
-  //         );
-  //       case 2:
-  //         return PieChartSectionData(
-  //           color: Color(0xffB8BFD6),
-  //           value: 15,
-  //           title: '15%',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: Color(0xffffffff)),
-  //         );
-  //       default:
-  //         throw Error();
-  //     }
-  //   });
-  // }
 }

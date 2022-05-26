@@ -186,7 +186,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 30.0,
+          vertical: 10.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,7 +201,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                   onPressed: () {},
                 ),
                 Text(
-                  '최근 7일 걸음수',
+                  '일주일간의 걸음수',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontWeight: FontWeight.bold,
@@ -356,6 +356,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
         } else {
           return BarChart(
             BarChartData(
+              maxY: 7000,
               alignment: BarChartAlignment.spaceAround,
               barGroups: [
                 generateGroupData(1, snapshot.data[7] ?? 0),
@@ -402,7 +403,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: leftTitleWidgets7,
-                    interval: 500,
+                    interval: 1000,
                     reservedSize: 50,
                   ),
                 ),
@@ -431,199 +432,43 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
     );
   }
 
-  FutureBuilder mainData() {
-    // 최근 30일
-    return FutureBuilder(
-        future: getMonthData(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.hasError) {
-            return Container();
-          } else {
-            List<num> list = List<num>.filled(30, 0);
-            for (int i = 0; i < snapshot.data.length && i < 7; i++) {
-              if (snapshot.data[i] == 0) {
-                break;
-              } else {
-                list[0] += snapshot.data[i];
-              }
-            }
-            for (int i = 7; i < snapshot.data.length || i < 14; i++) {
-              if (snapshot.data[i] == 0) {
-                break;
-              } else {
-                list[1] += snapshot.data[i];
-              }
-            }
-            // for (int i = 14; i < snapshot.data.length || i < 21; i++) {
-            //   if (snapshot.data[i] == 0) {
-            //     break;
-            //   } else {
-            //     list[2] += snapshot.data[i];
-            //   }
-            // }
-            // for (int i = 21; i < snapshot.data.length || i < 28; i++) {
-            //   if (snapshot.data[i] == 0) {
-            //     break;
-            //   } else {
-            //     list[3] += snapshot.data[i];
-            //   }
-            // }
-            // for (int i = 28; i < snapshot.data.length || i < 35; i++) {
-            //   if (snapshot.data[i] == 0) {
-            //     break;
-            //   } else {
-            //     list[4] += snapshot.data[i];
-            //   }
-            // }
-            // int value = 7 * i;
-
-            // if (snapshot.data) list[i] += snapshot.data[value + 1] ?? 0;
-            // print(list[i]);
-            // list[i] += snapshot.data[value + 2] ?? 0;
-            // print(list[i]);
-            // list[i] += snapshot.data[value + 3] ?? 0;
-            // print(list[i]);
-            // list[i] += snapshot.data[value + 4] ?? 0;
-            // print(list[i]);
-            // list[i] += snapshot.data[value + 5] ?? 0;
-            // print(list[i]);
-            // list[i] += snapshot.data[value + 6] ?? 0;
-            // print(list[i]);
-            // list[i] += snapshot.data[value + 7] ?? 0;
-            // print(list[i]);
-            //   // list[i] += snapshot.data[(7 * i) + 1];
-            //   // list[i] += snapshot.data[(7 * i) + 2];
-            //   // list[i] += snapshot.data[(7 * i) + 3];
-            //   // list[i] += snapshot.data[(7 * i) + 4];
-            //   // list[i] += snapshot.data[(7 * i) + 5];
-            //   // list[i] += snapshot.data[(7 * i) + 6];
-            //   // list[i] += snapshot.data[(7 * i) + 7];
-            // for (int i = 0; i < 30; i++) {
-            //   print(snapshot.data[i]);
-            // }
-            // print(snapshot.data[1]);
-            // print(snapshot.data[4]);
-            // return Text('$value');
-            return LineChart(LineChartData(
-              lineTouchData: LineTouchData(
-                touchTooltipData: LineTouchTooltipData(
-                  tooltipBgColor: Color(0xffFFCD00),
-                  tooltipRoundedRadius: 33,
-                ),
-              ),
-              titlesData: FlTitlesData(
-                show: true,
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 30,
-                    interval: 1,
-                    getTitlesWidget: bottomTitleWidgets30,
-                  ),
-                ),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    interval: 1000,
-                    getTitlesWidget: leftTitleWidgets30,
-                    reservedSize: 50,
-                  ),
-                ),
-              ),
-              gridData: FlGridData(show: false),
-              borderData: FlBorderData(
-                show: true,
-                border: Border.all(
-                  color: const Color(0xffdddddd),
-                  width: 1,
-                ),
-              ),
-              minX: 0,
-              maxX: 4,
-              minY: 0,
-              maxY: 6000,
-              lineBarsData: [
-                LineChartBarData(
-                  spots: [
-                    FlSpot(0, (list[4] ~/ 7).toDouble()),
-                    FlSpot(1, (list[3] ~/ 7).toDouble()),
-                    FlSpot(2, (list[2] ~/ 7).toDouble()),
-                    FlSpot(3, (list[1] ~/ 7).toDouble()),
-                    FlSpot(4, (list[0] ~/ 7).toDouble()),
-                    // FlSpot(0, (snapshot.data[5] ~/ 7).toDouble() ?? 0.0),
-                    // FlSpot(1, (snapshot.data[4] ~/ 7).toDouble() ?? 0.0),
-                    // FlSpot(2, (snapshot.data[3] ~/ 7).toDouble() ?? 0.0),
-                    // FlSpot(3, (snapshot.data[2] ~/ 7).toDouble() ?? 0.0),
-                    // FlSpot(4, (snapshot.data[1] ~/ 7).toDouble() ?? 0.0),
-                  ],
-                  isCurved: false,
-                  // gradient: LinearGradient(
-                  //   colors: gradientColors,
-                  //   begin: Alignment.centerLeft,
-                  //   end: Alignment.centerRight,
-                  // ),
-
-                  color: Color(0xff19335A),
-                  barWidth: 5,
-                  isStrokeCapRound: true,
-                  dotData: FlDotData(
-                    show: true,
-                  ),
-                  belowBarData: BarAreaData(
-                    show: false,
-                    gradient: LinearGradient(
-                      colors: gradientColors
-                          .map((color) => color.withOpacity(0.3))
-                          .toList(),
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                  ),
-                ),
-              ],
-            ));
-          }
-        });
-  }
-
   Widget getTitles(double value, TitleMeta meta) {
+    DateTime date = DateTime.now()
+        .toUtc()
+        .add(Duration(hours: -9))
+        .subtract(Duration(days: 1));
+
     const style = TextStyle(
       fontFamily: 'Pretandard',
       color: Colors.black,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.normal,
       fontSize: 14,
     );
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = const Text('M', style: style);
+        text = Text('${date.subtract(Duration(days: 7)).day}일', style: style);
         break;
       case 1:
-        text = const Text('T', style: style);
+        text = Text('${date.subtract(Duration(days: 6)).day}일', style: style);
         break;
       case 2:
-        text = const Text('W', style: style);
+        text = Text('${date.subtract(Duration(days: 5)).day}일', style: style);
         break;
       case 3:
-        text = const Text('T', style: style);
+        text = Text('${date.subtract(Duration(days: 4)).day}일', style: style);
         break;
       case 4:
-        text = const Text('F', style: style);
+        text = Text('${date.subtract(Duration(days: 3)).day}일', style: style);
         break;
       case 5:
-        text = const Text('S', style: style);
+        text = Text('${date.subtract(Duration(days: 2)).day}일', style: style);
         break;
       case 6:
-        text = const Text('S', style: style);
+        text = Text('${date.subtract(Duration(days: 1)).day}일', style: style);
         break;
       case 7:
-        text = const Text('S', style: style);
+        text = Text('${date.day}일', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -657,77 +502,11 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
     );
   }
 
-  Widget bottomTitleWidgets30(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontFamily: 'Pretendard',
-      color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = const Text('-5', style: style);
-        break;
-      case 1:
-        text = const Text('-4', style: style);
-        break;
-      case 2:
-        text = const Text('-3', style: style);
-        break;
-      case 3:
-        text = const Text('-2', style: style);
-        break;
-      case 4:
-        text = const Text('-1', style: style);
-        break;
-      case 5:
-        text = const Text('0', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
-
-    return Padding(child: text, padding: const EdgeInsets.only(top: 8.0));
-  }
-
   Widget leftTitleWidgets7(double value, TitleMeta meta) {
     const style = TextStyle(
       fontFamily: 'Pretendard',
       color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1000:
-        text = '1000';
-        break;
-      case 2000:
-        text = '2000';
-        break;
-      case 3000:
-        text = '3000';
-        break;
-      case 4000:
-        text = '4000';
-        break;
-      case 5000:
-        text = '5000';
-        break;
-      default:
-        text = '';
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
-  Widget leftTitleWidgets30(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontFamily: 'Pretendard',
-      color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.normal,
       fontSize: 14,
     );
     String text;
@@ -753,21 +532,58 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
       case 7000:
         text = '7000';
         break;
-      case 8000:
-        text = '8000';
-        break;
-      case 9000:
-        text = '9000';
-        break;
-      case 1000:
-        text = '10000';
-        break;
       default:
         text = '';
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
+
+  // Widget leftTitleWidgets30(double value, TitleMeta meta) {
+  //   const style = TextStyle(
+  //     fontFamily: 'Pretendard',
+  //     color: Color(0xff000000),
+  //     fontWeight: FontWeight.bold,
+  //     fontSize: 14,
+  //   );
+  //   String text;
+  //   switch (value.toInt()) {
+  //     case 1000:
+  //       text = '1000';
+  //       break;
+  //     case 2000:
+  //       text = '2000';
+  //       break;
+  //     case 3000:
+  //       text = '3000';
+  //       break;
+  //     case 4000:
+  //       text = '4000';
+  //       break;
+  //     case 5000:
+  //       text = '5000';
+  //       break;
+  //     case 6000:
+  //       text = '6000';
+  //       break;
+  //     case 7000:
+  //       text = '7000';
+  //       break;
+  //     case 8000:
+  //       text = '8000';
+  //       break;
+  //     case 9000:
+  //       text = '9000';
+  //       break;
+  //     case 1000:
+  //       text = '10000';
+  //       break;
+  //     default:
+  //       text = '';
+  //   }
+
+  //   return Text(text, style: style, textAlign: TextAlign.left);
+  // }
 
   FutureBuilder showMessage7() {
     num avgStepsForWeek = 0;

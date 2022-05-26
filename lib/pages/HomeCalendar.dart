@@ -549,7 +549,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
                     height: 15,
                   ),
                   Text(
-                    '힘들어..',
+                    '기다려주세요!',
                     // '${todayExerciseHours}시간 ${todayExerciseMinutes}분',
                     // '$docSnapshots[i]['time']',
                     style: TextStyle(

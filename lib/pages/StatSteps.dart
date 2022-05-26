@@ -1,5 +1,10 @@
+import 'dart:developer';
+
+import 'package:capstone_2022_48/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:async';
 // import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class AverStepsScreen extends StatefulWidget {
@@ -10,9 +15,23 @@ class AverStepsScreen extends StatefulWidget {
 }
 
 class _AverStepsScreenState extends State<AverStepsScreen> {
+  CollectionReference _collectionSteps =
+      FirebaseFirestore.instance.collection('StepDataCollection');
+
   bool isWeek = true;
   bool isMonth = false;
   late List<bool> isSelected;
+
+//
+  bool isWeekorMonth = true;
+
+  int touchedIndex = -1;
+
+  final Color barBackgroundColor = const Color(0xff72d8bf);
+
+  final Duration animDuration = const Duration(milliseconds: 250);
+
+  int showingTooltip = -1;
   // List<bool> _selections = List.generate(3, (_) => false);
 
   @override
@@ -29,6 +48,137 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
   bool showAvg = false;
 
   double shapePointerValue = 25;
+
+  Future<List> getSevenDaysData() async {
+    // DateTime _now = date;
+    // DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // DateTime _now = DateTime.now().subtract(Duration(days: 1));
+    DateTime _now = DateTime.now();
+    // print(_now);
+    DateTime _start;
+    DateTime _end;
+
+    List<num> list = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    // _now = DateTime.now()
+    //     .toUtc()
+    //     .subtract(Duration(days: i))
+    //     .add(Duration(hours: -9));
+    // _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+    // _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+    // QuerySnapshot querySnapshot = await _collectionSteps
+    //     .where('date', isGreaterThanOrEqualTo: _start)
+    //     .where('date', isLessThanOrEqualTo: _end)
+    //     .orderBy('date')
+    //     .get();
+    // var docSnapshots = querySnapshot.docs;
+
+    for (int i = 1; i < 9; i++) {
+      _now = DateTime.now().toUtc().subtract(Duration(days: i));
+      _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+      _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+      QuerySnapshot querySnapshot = await _collectionSteps
+          .where('date', isGreaterThanOrEqualTo: _start)
+          .where('date', isLessThanOrEqualTo: _end)
+          .orderBy('date')
+          .get();
+      var docSnapshots = querySnapshot.docs;
+      if (docSnapshots != null && docSnapshots.length != 0) {
+        list[i - 1] = docSnapshots[0]['step'];
+        // for (int i = 0; i < docSnapshots.length; i++) {
+        //   list[i] = docSnapshots[0]['step'];
+        // }
+      }
+    }
+
+    return list;
+  }
+
+  Future<List> getMonthData() async {
+    // DateTime _now = date;
+    // DateTime _now = date.toUtc().add(Duration(hours: -9));
+    // DateTime _now = DateTime.now().subtract(Duration(days: 1));
+    DateTime _now = DateTime.now();
+    // .subtract(Duration(days: 1));
+    // DateTime _start = _now.subtract(Duration(days: 1));
+    // DateTime _end = _now.subtract(Duration(days: 37));
+    DateTime _start;
+    DateTime _end;
+    // print(_now);
+    // DateTime _start;
+
+    // List<num> list = [0, 0, 0, 0, 0, 0, 0];
+    List<num> list = List.filled(40, 0);
+
+    // for (int i = 0; i < 7; i++) {
+    //   // _now = DateTime.now().toUTC().subtract(Duration(days: i));
+    //   var day = (i & 7) + 1;
+    //   // _start = _now.subtract(Duration(days: 1 + (i * 7)));
+    //   _start = _now.subtract(Duration(days: day));
+    //   _end = _start.subtract(Duration(days: 6));
+
+    //   QuerySnapshot querySnapshot = await _collectionSteps
+    //       .where('date', isGreaterThanOrEqualTo: _start)
+    //       .where('date', isLessThanOrEqualTo: _end)
+    //       .orderBy('date')
+    //       .get();
+    //   var docSnapshots = querySnapshot.docs;
+    //   if (docSnapshots != null && docSnapshots.length != 0) {
+    //     // list[i - 1] = docSnapshots[0]['step'];
+    //     // for (int j = 0; j < 7; j++) {
+    //     // for (int j = 0; j < docSnapshots.length; j++) {
+    //     for (int j = 0; j < 7; j++) {
+    //       list[i] = docSnapshots[j]['step'];
+    //     }
+    //   }
+    // }
+
+    // for (int i = 0; i < docSnapshots.length; i++) {
+    //   tan = docSnapshots[0]['step'];
+    // }
+
+    // var list = [t.round(), d.round(), z.round()];
+    // var list = [mon, tues, weds, thurs, fri, sat, sun];
+    // var list = [tans, dans, zis];
+
+    for (int i = 1; i < 40; i++) {
+      _now = DateTime.now().toUtc().subtract(Duration(days: i));
+      _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
+      _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
+
+      QuerySnapshot querySnapshot = await _collectionSteps
+          .where('date', isGreaterThanOrEqualTo: _start)
+          .where('date', isLessThanOrEqualTo: _end)
+          .orderBy('date')
+          .get();
+      var docSnapshots = querySnapshot.docs;
+      if (docSnapshots != null && docSnapshots.length != 0) {
+        list[i - 1] = docSnapshots[0]['step'];
+        // for (int i = 0; i < docSnapshots.length; i++) {
+        //   list[i] = docSnapshots[0]['step'];
+        // }
+      }
+    }
+
+    // QuerySnapshot querySnapshot = await _collectionSteps
+    //     .where('date', isGreaterThanOrEqualTo: _end)
+    //     .where('date', isLessThanOrEqualTo: _start)
+    //     .orderBy('date')
+    //     .get();
+    // var docSnapshots = querySnapshot.docs;
+    // if (docSnapshots != null && docSnapshots.length != 0) {
+    //   // list[i - 1] = docSnapshots[0]['step'];
+    //   // for (int j = 0; j < 7; j++) {
+    //   // for (int j = 0; j < docSnapshots.length; j++) {
+    //   for (int j = 0; j < docSnapshots.length; j++) {
+    //     list[j] = docSnapshots[0]['step'];
+    //   }
+    // }
+
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,10 +267,15 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 24, bottom: 12),
-                  child: LineChart(
-                    // showAvg ? avgData() : mainData(),
-                    showAvg ? mainData() : avgData(),
-                  ),
+                  child: isWeekorMonth ? weekData() : mainData(),
+                  // child: LineChart(
+                  //   // showAvg ? avgData() : mainData(),
+                  //   showAvg ? mainData() : avgData(),
+                  // ),
+                  // child: BarChart(
+                  //   isWeekorMonth ? weekData() : monthData(),
+                  //   swapAnimationDuration: animDuration,
+                  // ),
                 ),
               ),
             ),
@@ -165,12 +320,339 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                     fontSize: 24,
                   ),
                 ),
-                showAvg ? showMessage30() : showMessage7(),
+                isWeekorMonth ? showMessage7() : showMessage30(),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void toggleSelect(value) {
+    if (value == 0) {
+      isWeek = true;
+      isMonth = false;
+      isWeekorMonth = true;
+      // print(showAvg);
+    } else {
+      isWeek = false;
+      isMonth = true;
+      isWeekorMonth = false;
+      // print(showAvg);
+    }
+    setState(() {
+      isSelected = [isWeek, isMonth];
+    });
+  }
+
+  FutureBuilder weekData() {
+    return FutureBuilder(
+      future: getSevenDaysData(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.hasError) {
+          return Container();
+        } else {
+          return BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              barGroups: [
+                generateGroupData(1, snapshot.data[7] ?? 0),
+                generateGroupData(2, snapshot.data[6] ?? 0),
+                generateGroupData(3, snapshot.data[5] ?? 0),
+                generateGroupData(4, snapshot.data[4] ?? 0),
+                generateGroupData(5, snapshot.data[3] ?? 0),
+                generateGroupData(6, snapshot.data[2] ?? 0),
+                generateGroupData(7, snapshot.data[1] ?? 0),
+              ],
+              barTouchData: BarTouchData(
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Color(0xffFFCD00),
+                  tooltipRoundedRadius: 33,
+                ),
+                enabled: true,
+                handleBuiltInTouches: false,
+                touchCallback: (event, response) {
+                  if (response != null &&
+                      response.spot != null &&
+                      event is FlTapUpEvent) {
+                    setState(() {
+                      final x = response.spot!.touchedBarGroup.x;
+                      final isShowing = showingTooltip == x;
+                      if (isShowing) {
+                        showingTooltip = -1;
+                      } else {
+                        showingTooltip = x;
+                      }
+                    });
+                  }
+                },
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: getTitles,
+                    reservedSize: 38,
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: leftTitleWidgets7,
+                    interval: 500,
+                    reservedSize: 50,
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(
+                  color: Color(0xffdddddd),
+                ),
+              ),
+              gridData: FlGridData(show: false),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  FutureBuilder mainData() {
+    // 최근 30일
+    return FutureBuilder(
+        future: getMonthData(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.hasError) {
+            return Container();
+          } else {
+            List<num> list = List<num>.filled(30, 0);
+            for (int i = 0; i < snapshot.data.length && i < 7; i++) {
+              if (snapshot.data[i] == 0) {
+                break;
+              } else {
+                list[0] += snapshot.data[i];
+              }
+            }
+            for (int i = 7; i < snapshot.data.length || i < 14; i++) {
+              if (snapshot.data[i] == 0) {
+                break;
+              } else {
+                list[1] += snapshot.data[i];
+              }
+            }
+            // for (int i = 14; i < snapshot.data.length || i < 21; i++) {
+            //   if (snapshot.data[i] == 0) {
+            //     break;
+            //   } else {
+            //     list[2] += snapshot.data[i];
+            //   }
+            // }
+            // for (int i = 21; i < snapshot.data.length || i < 28; i++) {
+            //   if (snapshot.data[i] == 0) {
+            //     break;
+            //   } else {
+            //     list[3] += snapshot.data[i];
+            //   }
+            // }
+            // for (int i = 28; i < snapshot.data.length || i < 35; i++) {
+            //   if (snapshot.data[i] == 0) {
+            //     break;
+            //   } else {
+            //     list[4] += snapshot.data[i];
+            //   }
+            // }
+            // int value = 7 * i;
+
+            // if (snapshot.data) list[i] += snapshot.data[value + 1] ?? 0;
+            // print(list[i]);
+            // list[i] += snapshot.data[value + 2] ?? 0;
+            // print(list[i]);
+            // list[i] += snapshot.data[value + 3] ?? 0;
+            // print(list[i]);
+            // list[i] += snapshot.data[value + 4] ?? 0;
+            // print(list[i]);
+            // list[i] += snapshot.data[value + 5] ?? 0;
+            // print(list[i]);
+            // list[i] += snapshot.data[value + 6] ?? 0;
+            // print(list[i]);
+            // list[i] += snapshot.data[value + 7] ?? 0;
+            // print(list[i]);
+            //   // list[i] += snapshot.data[(7 * i) + 1];
+            //   // list[i] += snapshot.data[(7 * i) + 2];
+            //   // list[i] += snapshot.data[(7 * i) + 3];
+            //   // list[i] += snapshot.data[(7 * i) + 4];
+            //   // list[i] += snapshot.data[(7 * i) + 5];
+            //   // list[i] += snapshot.data[(7 * i) + 6];
+            //   // list[i] += snapshot.data[(7 * i) + 7];
+            // for (int i = 0; i < 30; i++) {
+            //   print(snapshot.data[i]);
+            // }
+            // print(snapshot.data[1]);
+            // print(snapshot.data[4]);
+            // return Text('$value');
+            return LineChart(LineChartData(
+              lineTouchData: LineTouchData(
+                touchTooltipData: LineTouchTooltipData(
+                  tooltipBgColor: Color(0xffFFCD00),
+                  tooltipRoundedRadius: 33,
+                ),
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30,
+                    interval: 1,
+                    getTitlesWidget: bottomTitleWidgets30,
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: 1000,
+                    getTitlesWidget: leftTitleWidgets30,
+                    reservedSize: 50,
+                  ),
+                ),
+              ),
+              gridData: FlGridData(show: false),
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(
+                  color: const Color(0xffdddddd),
+                  width: 1,
+                ),
+              ),
+              minX: 0,
+              maxX: 4,
+              minY: 0,
+              maxY: 6000,
+              lineBarsData: [
+                LineChartBarData(
+                  spots: [
+                    FlSpot(0, (list[4] ~/ 7).toDouble()),
+                    FlSpot(1, (list[3] ~/ 7).toDouble()),
+                    FlSpot(2, (list[2] ~/ 7).toDouble()),
+                    FlSpot(3, (list[1] ~/ 7).toDouble()),
+                    FlSpot(4, (list[0] ~/ 7).toDouble()),
+                    // FlSpot(0, (snapshot.data[5] ~/ 7).toDouble() ?? 0.0),
+                    // FlSpot(1, (snapshot.data[4] ~/ 7).toDouble() ?? 0.0),
+                    // FlSpot(2, (snapshot.data[3] ~/ 7).toDouble() ?? 0.0),
+                    // FlSpot(3, (snapshot.data[2] ~/ 7).toDouble() ?? 0.0),
+                    // FlSpot(4, (snapshot.data[1] ~/ 7).toDouble() ?? 0.0),
+                  ],
+                  isCurved: false,
+                  // gradient: LinearGradient(
+                  //   colors: gradientColors,
+                  //   begin: Alignment.centerLeft,
+                  //   end: Alignment.centerRight,
+                  // ),
+
+                  color: Color(0xff19335A),
+                  barWidth: 5,
+                  isStrokeCapRound: true,
+                  dotData: FlDotData(
+                    show: true,
+                  ),
+                  belowBarData: BarAreaData(
+                    show: false,
+                    gradient: LinearGradient(
+                      colors: gradientColors
+                          .map((color) => color.withOpacity(0.3))
+                          .toList(),
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                  ),
+                ),
+              ],
+            ));
+          }
+        });
+  }
+
+  Widget getTitles(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontFamily: 'Pretandard',
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text = const Text('M', style: style);
+        break;
+      case 1:
+        text = const Text('T', style: style);
+        break;
+      case 2:
+        text = const Text('W', style: style);
+        break;
+      case 3:
+        text = const Text('T', style: style);
+        break;
+      case 4:
+        text = const Text('F', style: style);
+        break;
+      case 5:
+        text = const Text('S', style: style);
+        break;
+      case 6:
+        text = const Text('S', style: style);
+        break;
+      case 7:
+        text = const Text('S', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: text,
+    );
+  }
+
+  Future<dynamic> refreshState() async {
+    setState(() {});
+    await Future<dynamic>.delayed(
+        animDuration + const Duration(milliseconds: 50));
+    if (isWeekorMonth) {
+      await refreshState();
+    }
+  }
+
+  BarChartGroupData generateGroupData(int x, int y) {
+    return BarChartGroupData(
+      x: x,
+      showingTooltipIndicators: showingTooltip == x ? [0] : [],
+      barRods: [
+        BarChartRodData(
+          toY: y.toDouble(),
+          color: Color(0xff4675C0),
+        ),
+      ],
     );
   }
 
@@ -209,45 +691,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
     return Padding(child: text, padding: const EdgeInsets.only(top: 8.0));
   }
 
-  Widget bottomTitleWidgets7(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontFamily: 'Pretendard',
-      color: Color(0xff000000),
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = const Text('-6', style: style);
-        break;
-      case 1:
-        text = const Text('-5', style: style);
-        break;
-      case 2:
-        text = const Text('-4', style: style);
-        break;
-      case 3:
-        text = const Text('-3', style: style);
-        break;
-      case 4:
-        text = const Text('-2', style: style);
-        break;
-      case 5:
-        text = const Text('-1', style: style);
-        break;
-      case 6:
-        text = const Text('0', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
-
-    return Padding(child: text, padding: const EdgeInsets.only(top: 8.0));
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
+  Widget leftTitleWidgets7(double value, TitleMeta meta) {
     const style = TextStyle(
       fontFamily: 'Pretendard',
       color: Color(0xff000000),
@@ -256,306 +700,179 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
     );
     String text;
     switch (value.toInt()) {
-      case 1:
+      case 1000:
         text = '1000';
         break;
-      case 2:
+      case 2000:
         text = '2000';
         break;
-      case 3:
+      case 3000:
         text = '3000';
         break;
-      case 4:
+      case 4000:
         text = '4000';
         break;
-      case 5:
+      case 5000:
         text = '5000';
         break;
       default:
-        return Container();
+        text = '';
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  LineChartData mainData() {
-    // 최근 30일
+  Widget leftTitleWidgets30(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontFamily: 'Pretendard',
+      color: Color(0xff000000),
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 1000:
+        text = '1000';
+        break;
+      case 2000:
+        text = '2000';
+        break;
+      case 3000:
+        text = '3000';
+        break;
+      case 4000:
+        text = '4000';
+        break;
+      case 5000:
+        text = '5000';
+        break;
+      case 6000:
+        text = '6000';
+        break;
+      case 7000:
+        text = '7000';
+        break;
+      case 8000:
+        text = '8000';
+        break;
+      case 9000:
+        text = '9000';
+        break;
+      case 1000:
+        text = '10000';
+        break;
+      default:
+        text = '';
+    }
 
-    double? nowScaleDouble = 1200;
+    return Text(text, style: style, textAlign: TextAlign.left);
+  }
 
-    return LineChartData(
-      extraLinesData: ExtraLinesData(
-        horizontalLines: nowScaleDouble == null
-            ? null
-            : [
-                HorizontalLine(
-                  // y: nowScaleDouble,
-                  y: 2000,
-                  color: const Color.fromRGBO(197, 0, 0, 1),
-                  strokeWidth: 2,
-                  dashArray: [1000, 2000],
-                  label: HorizontalLineLabel(
-                    show: true,
-                    alignment: Alignment(1, 0.5),
-                    padding: const EdgeInsets.only(left: 10, top: 5),
-                    // labelResolver: (line) =>
-                    //     dateToScreen(DateTime.now(), format: "MM/dd\nHHmm"),
+  FutureBuilder showMessage7() {
+    num avgStepsForWeek = 0;
+    return FutureBuilder(
+        future: getSevenDaysData(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.hasError) {
+            return Flexible(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xffdddddd),
+                ),
+                child: Text(
+                  // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+                  '기다려주세요!',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 16,
                   ),
                 ),
-              ],
-      ),
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets30,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 50,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff19335A), width: 1)),
-      minX: 0,
-      maxX: 4,
-      minY: 0,
-      maxY: 5,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(1, 2),
-            FlSpot(2, 5),
-            FlSpot(3, 3.1),
-            FlSpot(4, 3),
-          ],
-          isCurved: false,
-          // gradient: LinearGradient(
-          //   colors: gradientColors,
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          // ),
-
-          color: Color(0xff19335A),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: false,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-          ),
-        ),
-      ],
-    );
+              ),
+            );
+          } else {
+            for (int i = 0; i < 7; i++) {
+              avgStepsForWeek += snapshot.data[i];
+            }
+            return Flexible(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xffdddddd),
+                ),
+                child: Text(
+                  // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+                  '최근 7일간 평균적으로 ${avgStepsForWeek ~/ 7}만큼 걸으셨습니다!',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
   }
 
-  LineChartData avgData() {
-    // 최근 7일
-    return LineChartData(
-      // lineTouchData: LineTouchData(enabled: false),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
-        verticalInterval: 1,
-        horizontalInterval: 1,
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            // color: const Color(0xff19335A),
-            color: Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            // color: const Color(0xff19335A),
-            color: Color(0xff000000),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets7,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
-          ),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff000000), width: 1)),
-      minX: 0,
-      maxX: 6,
-      minY: 0,
-      maxY: 5,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(1, 1),
-            FlSpot(2, 5),
-            FlSpot(3, 4.7),
-            FlSpot(4, 3),
-            FlSpot(5, 2.5),
-            FlSpot(6, 4),
-          ],
-          isCurved: false,
-          // gradient: LinearGradient(
-          //   colors: [
-          //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
-          //         .lerp(0.2)!,
-          //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
-          //         .lerp(0.2)!,
-          //   ],
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          // ),
-          color: Color(0xff19335A),
-          barWidth: 4,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: false,
-            gradient: LinearGradient(
-              colors: [
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void toggleSelect(value) {
-    if (value == 0) {
-      isWeek = true;
-      isMonth = false;
-      showAvg = false;
-      // print(showAvg);
-    } else {
-      isWeek = false;
-      isMonth = true;
-      showAvg = true;
-      // print(showAvg);
-    }
-    setState(() {
-      isSelected = [isWeek, isMonth];
-    });
-  }
-
-  Widget showMessage7() {
-    var avgStepsForWeek = 3400;
-    return Flexible(
-      flex: 1,
-      child: Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xffdddddd),
-        ),
-        child: Text(
-          // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-          '최근 7일간 평균적으로 ${avgStepsForWeek}만큼 걸으셨습니다!',
-          style: TextStyle(
-            fontFamily: 'Pretendard',
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget showMessage30() {
-    var avgStepsForMonth = 3400;
-    return Flexible(
-      flex: 1,
-      child: Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xffdddddd),
-        ),
-        child: Text(
-          // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-          // '30일 메세지',
-          '최근 30일간 평균적으로 ${avgStepsForMonth}만큼 걸으셨습니다!',
-          style: TextStyle(
-            fontFamily: 'Pretendard',
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
+  FutureBuilder showMessage30() {
+    num avgStepsForMonth = 0;
+    return FutureBuilder(
+        future: getMonthData(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.hasError) {
+            return Flexible(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xffdddddd),
+                ),
+                child: Text(
+                  '기다려주세요!',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            );
+          } else {
+            for (int i = 0; i < snapshot.data.length; i++) {
+              avgStepsForMonth += snapshot.data[i];
+            }
+            // print(snapshot.data.length);
+            // for (int i = 1; i < 28; i++) {
+            //   avgStepsForMonth += snapshot.data[i] ?? 0;
+            // }
+            return Flexible(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xffdddddd),
+                ),
+                child: Text(
+                  // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
+                  // '30일 메세지',
+                  '최근 30일간 평균적으로 ${avgStepsForMonth ~/ snapshot.data.length}걸음 만큼 걸으셨습니다!',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
   }
 }

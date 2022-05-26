@@ -201,7 +201,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                   onPressed: () {},
                 ),
                 Text(
-                  '걸음수 통계',
+                  '최근 7일 걸음수',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontWeight: FontWeight.bold,
@@ -219,40 +219,40 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
             SizedBox(
               height: 15.0,
             ),
-            ToggleButtons(
-              fillColor: Color(0xff8CAAD8),
-              // selectedColor: Color(0xff000000),
-              selectedColor: Color(0xffffffff),
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    '최근 7일',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    '최근 30일',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-              ],
-              // isSelected: isSelected,
-              // onPressed: toggleSelect,
-              isSelected: isSelected,
-              // onPressed: (int index) {
-              //   setState(() {
-              //     // _selections[index] = !_selections[index];
-              //     for (int i = 0; i < _selections.length; i++) {
-              //       _selections[i] = i == index;
-              //     }
-              //   });
-              // },
-              // renderBorder: false,
-              onPressed: toggleSelect,
-            ),
+            // ToggleButtons(
+            //   fillColor: Color(0xff8CAAD8),
+            //   // selectedColor: Color(0xff000000),
+            //   selectedColor: Color(0xffffffff),
+            //   children: [
+            //     Padding(
+            //       padding: EdgeInsets.symmetric(horizontal: 10),
+            //       child: Text(
+            //         '최근 7일',
+            //         style: TextStyle(fontSize: 14),
+            //       ),
+            //     ),
+            //     Padding(
+            //       padding: EdgeInsets.symmetric(horizontal: 10),
+            //       child: Text(
+            //         '최근 30일',
+            //         style: TextStyle(fontSize: 14),
+            //       ),
+            //     ),
+            //   ],
+            //   // isSelected: isSelected,
+            //   // onPressed: toggleSelect,
+            //   isSelected: isSelected,
+            //   // onPressed: (int index) {
+            //   //   setState(() {
+            //   //     // _selections[index] = !_selections[index];
+            //   //     for (int i = 0; i < _selections.length; i++) {
+            //   //       _selections[i] = i == index;
+            //   //     }
+            //   //   });
+            //   // },
+            //   // renderBorder: false,
+            //   onPressed: toggleSelect,
+            // ),
             SizedBox(
               height: 15.0,
             ),
@@ -267,7 +267,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 24, bottom: 12),
-                  child: isWeekorMonth ? weekData() : mainData(),
+                  child: weekData(),
                   // child: LineChart(
                   //   // showAvg ? avgData() : mainData(),
                   //   showAvg ? mainData() : avgData(),
@@ -320,7 +320,8 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                     fontSize: 24,
                   ),
                 ),
-                isWeekorMonth ? showMessage7() : showMessage30(),
+                // isWeekorMonth ? showMessage7() : showMessage30(),
+                showMessage7(),
               ],
             ),
           ],
@@ -808,7 +809,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                 ),
                 child: Text(
                   // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-                  '최근 7일간 평균적으로 ${avgStepsForWeek ~/ 7}만큼 걸으셨습니다!',
+                  '최근 7일간 평균적으로 ${avgStepsForWeek ~/ 7} 걸음만큼 걸으셨습니다!',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontSize: 16,

@@ -75,7 +75,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
     // var docSnapshots = querySnapshot.docs;
 
     for (int i = 1; i < 9; i++) {
-      _now = DateTime.now().toUtc().subtract(Duration(days: i));
+      _now = DateTime.now().subtract(Duration(days: i));
       _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
       _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
 
@@ -144,7 +144,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
     // var list = [tans, dans, zis];
 
     for (int i = 1; i < 40; i++) {
-      _now = DateTime.now().toUtc().subtract(Duration(days: i));
+      _now = DateTime.now().subtract(Duration(days: i));
       _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
       _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
 
@@ -433,10 +433,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
   }
 
   Widget getTitles(double value, TitleMeta meta) {
-    DateTime date = DateTime.now()
-        .toUtc()
-        .add(Duration(hours: -9))
-        .subtract(Duration(days: 1));
+    DateTime date = DateTime.now().subtract(Duration(days: 1));
 
     const style = TextStyle(
       fontFamily: 'Pretandard',

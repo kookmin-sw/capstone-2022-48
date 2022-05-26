@@ -43,11 +43,11 @@ class DietData extends ChangeNotifier {
   late String _food;
   late int _score; // 0 = bad 1 = soso 2 = good
 
-  double _calories = 0;
-  double _tan = 0;
-  double _dan = 0;
-  double _zi = 0;
-  double _sugar = 0;
+  num _calories = 0;
+  num _tan = 0;
+  num _dan = 0;
+  num _zi = 0;
+  num _sugar = 0;
 
   // final _iconList = {
   //   1: Icon(Icons.sentiment_very_satisfied, color: Color(0xffFFCD00)),
@@ -62,11 +62,11 @@ class DietData extends ChangeNotifier {
   int get score => _score;
 
   // Map<int, Icon> get iconList => _iconList;
-  double get calories => _calories;
-  double get tan => _tan;
-  double get dan => _dan;
-  double get zi => _zi;
-  double get sugar => _sugar;
+  num get calories => _calories;
+  num get tan => _tan;
+  num get dan => _dan;
+  num get zi => _zi;
+  num get sugar => _sugar;
 
   // set date(DateTime date) {
   //   _date = date;
@@ -91,28 +91,28 @@ class DietData extends ChangeNotifier {
   //   _score = score;
   // }
 
-  void addCalories(double num) {
-    _calories += num;
+  void addCalories(num n) {
+    _calories = n;
     notifyListeners();
   }
 
-  void addTan(double num) {
-    _tan += num;
+  void addTan(num n) {
+    _tan = n;
     notifyListeners();
   }
 
-  void addDan(double num) {
-    _dan += num;
+  void addDan(num n) {
+    _dan = n;
     notifyListeners();
   }
 
-  void addZi(double num) {
-    _zi += num;
+  void addZi(num n) {
+    _zi = n;
     notifyListeners();
   }
 
-  void addSugar(double num) {
-    _sugar += num;
+  void addSugar(num n) {
+    _sugar = n;
     notifyListeners();
   }
 }

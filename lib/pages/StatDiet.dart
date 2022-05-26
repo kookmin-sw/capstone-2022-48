@@ -135,7 +135,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
 
     for (int i = 1; i < 9; i++) {
       num cals = 0;
-      _now = DateTime.now().toUtc().subtract(Duration(days: i));
+      _now = DateTime.now().subtract(Duration(days: i));
       _start = DateTime(_now.year, _now.month, _now.day, 0, 0);
       _end = DateTime(_now.year, _now.month, _now.day, 23, 59, 59);
 
@@ -307,10 +307,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
   }
 
   Widget bottomTitleWidgets7(double value, TitleMeta meta) {
-    DateTime date = DateTime.now()
-        .toUtc()
-        .add(Duration(hours: -9))
-        .subtract(Duration(days: 1));
+    DateTime date = DateTime.now().subtract(Duration(days: 1));
 
     const style = TextStyle(
       fontFamily: 'Pretendard',

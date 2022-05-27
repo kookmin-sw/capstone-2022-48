@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'indicator.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AverDietScreen extends StatefulWidget {
   const AverDietScreen({Key? key}) : super(key: key);
@@ -14,6 +15,18 @@ class AverDietScreen extends StatefulWidget {
 }
 
 class _AverDietScreenState extends State<AverDietScreen> {
+  final spinkit = SpinKitPumpingHeart(
+    color: Color(0xFFf05650),
+    size: 120,
+    // itemBuilder: (BuildContext context, int) {
+    //   return DecoratedBox(
+    //     decoration: BoxDecoration(
+    //       color: Colors.white,
+    //     ),
+    //   );
+    // },
+  );
+
   CollectionReference _collectionKcals =
       FirebaseFirestore.instance.collection('DietDataCollection');
   int showingTooltip = -1;
@@ -161,7 +174,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
       future: getSevenDaysData(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.hasError) {
-          return Container();
+          return Center(child: spinkit);
         } else {
           return BarChart(
             BarChartData(
@@ -270,6 +283,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
             for (int i = 0; i < 7; i++) {
               avgKcalsForWeek += snapshot.data[i];
             }
+            avgKcalsForWeek = avgKcalsForWeek ~/ 7;
             return Flexible(
               flex: 1,
               child: Container(
@@ -281,7 +295,7 @@ class _AverDietScreenState extends State<AverDietScreen> {
                 ),
                 child: Text(
                   // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-                  '최근 7일간 평균적으로 ${avgKcalsForWeek ~/ 7} Kcal만큼 섭취하셨습니다!',
+                  '최근 7일간 평균적으로 ${avgKcalsForWeek} Kcal만큼 섭취하셨습니다!',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontSize: 16,

@@ -55,9 +55,9 @@ dependencies:
   sqflite: ^2.0.2+1
   path: ^1.8.1
   ntp: ^2.0.0
-  syncfusion_flutter_charts: ^20.1.57
-  
+  syncfusion_flutter_charts: ^20.1.57  
   fluttertoast: ^8.0.9  
+  flutter_spinkit: ^5.1.0
   
 dev_dependencies:
   flutter_test:

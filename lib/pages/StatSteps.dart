@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
-// import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AverStepsScreen extends StatefulWidget {
   const AverStepsScreen({Key? key}) : super(key: key);
@@ -15,6 +15,18 @@ class AverStepsScreen extends StatefulWidget {
 }
 
 class _AverStepsScreenState extends State<AverStepsScreen> {
+  final spinkit = SpinKitPumpingHeart(
+    color: Color(0xFFf05650),
+    size: 120,
+    // itemBuilder: (BuildContext context, int) {
+    //   return DecoratedBox(
+    //     decoration: BoxDecoration(
+    //       color: Colors.white,
+    //     ),
+    //   );
+    // },
+  );
+
   CollectionReference _collectionSteps =
       FirebaseFirestore.instance.collection('StepDataCollection');
 
@@ -352,7 +364,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
       future: getSevenDaysData(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.hasError) {
-          return Container();
+          return Center(child: spinkit);
         } else {
           return BarChart(
             BarChartData(
@@ -611,6 +623,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
             for (int i = 0; i < 7; i++) {
               avgStepsForWeek += snapshot.data[i];
             }
+            avgStepsForWeek = avgStepsForWeek ~/ 7;
             return Flexible(
               flex: 1,
               child: Container(
@@ -622,7 +635,7 @@ class _AverStepsScreenState extends State<AverStepsScreen> {
                 ),
                 child: Text(
                   // '생존률이 30% \n증가했습니다!\n\n잘하고 있어요! \n화이팅😆',
-                  '최근 7일간 평균적으로 ${avgStepsForWeek ~/ 7} 걸음만큼 걸으셨습니다!',
+                  '최근 7일간 평균적으로 ${avgStepsForWeek} 걸음만큼 걸으셨습니다!',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontSize: 16,

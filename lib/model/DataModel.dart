@@ -148,6 +148,26 @@ class UserData extends ChangeNotifier {
   double get amr => _amr;
   int get suggestedKcal => _suggestedKcal;
 
+  void setGender(bool b) {
+    _gender = b;
+    notifyListeners();
+  }
+
+  void setAge(int n) {
+    _age = n;
+    notifyListeners();
+  }
+
+  void setCm(double d) {
+    _cm = d;
+    notifyListeners();
+  }
+
+  void setKg(double d) {
+    _kg = d;
+    notifyListeners();
+  }
+
   void setBMI() {
     _bmi = cm * 0.01 * kg * kg;
     notifyListeners();

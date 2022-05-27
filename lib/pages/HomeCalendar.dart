@@ -177,7 +177,9 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         SizedBox(
                           height: 30,
                         ),
-                        (_selectedDay == DateTime.now())
+                        (_selectedDay.day == DateTime.now().day &&
+                                _selectedDay.month == DateTime.now().month &&
+                                _selectedDay.year == DateTime.now().year)
                             ? Text(
                                 '오늘은 ' + _steps + ' 걸음',
                                 style: TextStyle(

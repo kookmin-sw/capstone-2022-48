@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AverExerScreen extends StatefulWidget {
   const AverExerScreen({Key? key}) : super(key: key);
@@ -11,6 +12,18 @@ class AverExerScreen extends StatefulWidget {
 }
 
 class _AverExerScreenState extends State<AverExerScreen> {
+  final spinkit = SpinKitPumpingHeart(
+    color: Color(0xFFf05650),
+    size: 120,
+    // itemBuilder: (BuildContext context, int) {
+    //   return DecoratedBox(
+    //     decoration: BoxDecoration(
+    //       color: Colors.white,
+    //     ),
+    //   );
+    // },
+  );
+
   CollectionReference _collectionExc =
       FirebaseFirestore.instance.collection('ExerciseDataCollection');
   int showingTooltip = -1;
@@ -114,7 +127,7 @@ class _AverExerScreenState extends State<AverExerScreen> {
       future: getSevenDaysData(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.hasError) {
-          return Container();
+          return Center(child: spinkit);
         } else {
           return BarChart(
             BarChartData(
@@ -367,8 +380,10 @@ class _AverExerScreenState extends State<AverExerScreen> {
               avgExersForWeek += snapshot.data[i];
             }
 
-            num avgExersForWeekMinutes = avgExersForWeek ~/ 7 % 60;
-            num avgExersForWeekHours = avgExersForWeek ~/ 7 ~/ 60;
+            num avgExersForWeekMinutes = avgExersForWeek ~/ 7;
+            avgExersForWeekMinutes = avgExersForWeekMinutes % 60;
+            num avgExersForWeekHours = avgExersForWeek ~/ 7;
+            avgExersForWeekHours = avgExersForWeekHours ~/ 60;
             return Flexible(
               flex: 1,
               child: Container(

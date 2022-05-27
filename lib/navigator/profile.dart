@@ -1,6 +1,8 @@
 import 'package:capstone_2022_48/pages/HomeCalendar.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_2022_48/navigator/sidemenu.dart';
+import 'package:provider/provider.dart';
+import 'package:capstone_2022_48/model/DataModel.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -8,6 +10,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  late UserData _user;
+  late bool gender; // 0false남성 1true여성
+  late int age;
+  late double cm;
+  late double kg;
+
   String _selectedGender = '여성';
   final formKey = GlobalKey<FormState>();
   @override
@@ -42,7 +50,8 @@ class _ProfileState extends State<Profile> {
                   color: Color(0xffdddddd),
                 ),
                 child: Text(
-                  '기초 대사량과 BMI 지수, 필요 섭취 칼로리량을 계산하기 위해 필요한 정보들입니다. 반드시 입력해주세요😆',
+                  // '기초 대사량과 BMI 지수, 필요 섭취 칼로리량을 계산하기 위해 필요한 정보들입니다. 반드시 입력해주세요😆',
+                  'BMR과 BMI를 계산하기 위해 필요한 정보들입니다. 반드시 입력해주세요😆',
                   style: TextStyle(
                     fontFamily: 'Pretendard',
                     fontSize: 16,
@@ -60,7 +69,7 @@ class _ProfileState extends State<Profile> {
                       text: "    성별을 선택해주세요.",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontFamily: 'Pretendard',
                       ),
                     ),
@@ -99,7 +108,7 @@ class _ProfileState extends State<Profile> {
                   style: TextStyle(fontFamily: 'Pretendard'),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Form(
                 key: formKey,
                 child: Column(
@@ -107,8 +116,11 @@ class _ProfileState extends State<Profile> {
                     TextFormField(
                       style: TextStyle(
                         fontFamily: 'Pretendard',
+                        fontSize: 16,
                       ),
-                      onSaved: (value) {},
+                      onSaved: (value) {
+                        age = value as int;
+                      },
                       validator: (value) {
                         if (value != null && value.isEmpty) {
                           return '나이를 입력해주세요';
@@ -116,21 +128,24 @@ class _ProfileState extends State<Profile> {
                         return null;
                       },
                       decoration: InputDecoration(
-                          icon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          hintText: '나이를 입력해주세요.',
-                          labelText: '나이'),
+                        icon: Icon(Icons.person),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintText: '나이를 입력해주세요.',
+                        labelText: '나이',
+                      ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     TextFormField(
                       style: TextStyle(
                         fontFamily: 'Pretendard',
+                        fontSize: 16,
                       ),
-                      onSaved: (value) {},
+                      onSaved: (value) {
+                        cm = value as double;
+                      },
                       validator: (value) {
                         if (value != null && value.isEmpty) {
                           return '키를 입력해주세요';
@@ -147,12 +162,15 @@ class _ProfileState extends State<Profile> {
                           hintText: '키를 입력해주세요.',
                           labelText: '키'),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     TextFormField(
                       style: TextStyle(
                         fontFamily: 'Pretendard',
+                        fontSize: 16,
                       ),
-                      onSaved: (value) {},
+                      onSaved: (value) {
+                        kg = value as double;
+                      },
                       validator: (value) {
                         if (value != null && value.isEmpty) {
                           return '체중을 입력해주세요';
@@ -177,7 +195,7 @@ class _ProfileState extends State<Profile> {
                             primary: Color.fromARGB(255, 102, 160, 207),
                             textStyle: TextStyle(
                                 fontFamily: 'Pretendard',
-                                fontSize: 15,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold),
                           ),
                           onPressed: () {
@@ -193,7 +211,7 @@ class _ProfileState extends State<Profile> {
                                     backgroundColor:
                                         Color.fromARGB(255, 183, 179, 179),
                                     content: Text(
-                                      '제출 되었습니다!',
+                                      '입력 되었습니다!',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontFamily: 'Pretendard',
@@ -205,9 +223,21 @@ class _ProfileState extends State<Profile> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => HomeCalendar()));
+                              if (_selectedGender == '여성') {
+                                gender = true;
+                              } else {
+                                gender = false;
+                              }
+
+                              context.read<UserData>().setGender(gender);
+                              context.read<UserData>().setAge(age);
+                              context.read<UserData>().setCm(cm);
+                              context.read<UserData>().setKg(kg);
+                              context.read<UserData>().setBMI();
+                              context.read<UserData>().setBMR();
                             }
                           },
-                          child: Text('제출 하기')),
+                          child: Text('입력')),
                     ),
                   ],
                 ),

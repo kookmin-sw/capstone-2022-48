@@ -15,7 +15,7 @@ Recently, interest in health care itself, not only for losing weight, has been i
 
 ### 2. 소개 영상
 
-중간 보고서로 대체할 예정입니다.
+https://www.youtube.com/watch?v=UyrztrdtPdw
 
 ### 3. 팀 소개
 
